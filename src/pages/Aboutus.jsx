@@ -6,39 +6,39 @@ const AboutUs = () => {
   const teamMembers = [
     {
       id: 1,
-      name: 'Sarah Johnson',
+      name: 'Samuel Palmer',
       role: 'Founder & CEO',
-      bio: 'With over 15 years in real estate, Sarah founded VistaEstate to revolutionize property finding.',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80',
+      bio: 'With over 15 years in real estate, Samuel founded VistaEstate to revolutionize property finding.',
+      image: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg',
       phone: '+1 (555) 123-4567',
-      email: 'sarah@vistaestate.com'
+      email: 'samuel@vistaestate.com'
     },
     {
       id: 2,
-      name: 'Michael Chen',
+      name: 'Vincent Fuller',
       role: 'Head of Sales',
-      bio: 'Michael brings a decade of luxury property experience to our team.',
-      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
+      bio: 'Vincent brings a decade of luxury property experience to our team.',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg',
       phone: '+1 (555) 234-5678',
-      email: 'michael@vistaestate.com'
+      email: 'vincent@vistaestate.com'
     },
     {
       id: 3,
-      name: 'David Wilson',
+      name: 'Brittany Watkins',
       role: 'Marketing Director',
-      bio: 'David oversees all marketing strategies and brand development.',
-      image: 'https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80',
+      bio: 'Brittany oversees all marketing strategies and brand development.',
+      image: 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg',
       phone: '+1 (555) 345-6789',
-      email: 'david@vistaestate.com'
+      email: 'brittany@vistaestate.com'
     },
     {
       id: 4,
-      name: 'Emma Rodriguez',
+      name: 'Michelle Ramirez',
       role: 'Lead Agent',
-      bio: 'Emma specializes in commercial properties and investments.',
-      image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
+      bio: 'Michelle specializes in commercial properties and investments.',
+      image: 'https://images.pexels.com/photos/948875/pexels-photo-948875.jpeg',
       phone: '+1 (555) 456-7890',
-      email: 'emma@vistaestate.com'
+      email: 'michelle@vistaestate.com'
     }
   ];
 
@@ -53,7 +53,7 @@ const AboutUs = () => {
   // Awards data
   const awards = [
     {
-      title: 'Best Real Estate Agency 2023',
+      title: 'Best Real Estate Agency',
       organization: 'National Property Awards',
       year: '2023',
       icon: (
@@ -77,7 +77,7 @@ const AboutUs = () => {
       organization: 'Tech Property Awards',
       year: '2022',
       icon: (
-        <svg className="w-10 h-10 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
       )
@@ -86,32 +86,43 @@ const AboutUs = () => {
 
   return (
     <div className="font-quicksand antialiased text-slate-700 bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gray-900 overflow-hidden">
+      {/* Hero Section - Full Screen */}
+      <section className="relative h-screen w-full flex items-center justify-center bg-gray-900 overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-            alt="Luxury Home" 
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+            alt="About VistaEstate" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 to-gray-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/50 to-transparent"></div>
         </div>
         
         {/* Content Container */}
         <div className="relative z-10 w-full max-w-7xl px-6 sm:px-8 mx-auto">
-          <div className="flex flex-col items-center justify-center min-h-[80vh] py-16">
+          <div className="flex flex-col items-center justify-center">
             {/* Headline */}
-            <div className="text-center mb-12 w-full max-w-4xl px-4">
+            <div className="text-center w-full max-w-4xl px-4">
               <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
-                <span className="text-emerald-400 font-medium text-xs tracking-wide whitespace-nowrap">✨ ABOUT VISTAESTATE</span>
+                <span className="text-emerald-400 font-medium text-xs tracking-wide whitespace-nowrap">🏢 ABOUT US</span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-dosis font-medium text-white mb-4 leading-tight">
-                Our Story, <span className="text-emerald-400">Our Team</span>
+                Our <span className="text-emerald-400">Story</span> & <span className="text-emerald-400">Team</span>
               </h1>
               <p className="text-lg md:text-xl text-white/80 font-light mb-8 leading-relaxed max-w-2xl mx-auto">
-                Discover the people and values behind VistaEstate's success
+                Discover the people and values behind our success in real estate
               </p>
+              <div className="mt-8">
+                <Link 
+                  to="/contact" 
+                  className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  Contact Our Team
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -123,23 +134,23 @@ const AboutUs = () => {
           {/* Section Header */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2 mb-6">
-              <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">🏢 OUR JOURNEY</span>
+              <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">📜 OUR JOURNEY</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
-              Our <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">Story</span>
+              Building <span className="text-emerald-600">VistaEstate</span>
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
-              From humble beginnings to industry leaders - our journey in real estate
+              From vision to reality - our evolution in the real estate industry
             </p>
           </div>
           
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="lg:w-1/2">
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl ">
                 <img 
-                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" 
-                  alt="Our Modern Office" 
-                  className="w-full h-auto object-cover"
+                  src="https://images.pexels.com/photos/2440471/pexels-photo-2440471.jpeg" 
+                  alt="Our Office" 
+                  className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
               </div>
@@ -155,9 +166,9 @@ const AboutUs = () => {
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-4">
                 {stats.map((stat, index) => (
-                  <div key={index} className="text-center p-4 bg-slate-50 rounded-xl hover:bg-emerald-50 transition-colors group">
-                    <span className="block text-2xl font-medium text-slate-800 group-hover:text-emerald-600 transition-colors">{stat.value}</span>
-                    <span className="block text-sm text-slate-500 font-medium">{stat.label}</span>
+                  <div key={index} className="bg-slate-50 hover:bg-emerald-50 rounded-xl p-6 text-center transition-colors duration-300 group">
+                    <div className="text-3xl font-bold text-emerald-600 mb-2 group-hover:text-emerald-700">{stat.value}</div>
+                    <div className="text-sm text-slate-600 font-medium">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -175,10 +186,10 @@ const AboutUs = () => {
               <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">🌟 OUR VALUES</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
-              Core <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">Principles</span>
+              What <span className="text-emerald-600">Guides Us</span>
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
-              The foundation of everything we do at VistaEstate
+              The principles that shape every decision we make
             </p>
           </div>
           
@@ -201,9 +212,9 @@ const AboutUs = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
               </div>
-              <h3 className="text-xl font-dosis font-semibold text-gray-900 mb-3">Excellence</h3>
+              <h3 className="text-xl font-dosis font-semibold text-gray-900 mb-3">Innovation</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                We strive for excellence in everything we do, delivering results that exceed expectations.
+                We constantly seek better ways to serve our clients, leveraging technology and creative solutions.
               </p>
             </div>
             
@@ -215,7 +226,7 @@ const AboutUs = () => {
               </div>
               <h3 className="text-xl font-dosis font-semibold text-gray-900 mb-3">Community</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                We're not just selling properties - we're helping build communities where people can thrive.
+                We're committed to building not just houses, but thriving communities where people can flourish.
               </p>
             </div>
           </div>
@@ -231,40 +242,45 @@ const AboutUs = () => {
               <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">👔 OUR TEAM</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
-              Meet Our <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">Experts</span>
+              The <span className="text-emerald-600">Leadership</span>
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
-              The passionate professionals dedicated to your real estate success
+              Meet the passionate professionals driving our success
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map(member => (
-              <div key={member.id} className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100">
+              <div key={member.id} className="group relative rounded-xl overflow-hidden h-96 shadow-md hover:shadow-lg transition-all duration-300">
                 {/* Team Member Image */}
-                <div className="relative h-72 overflow-hidden">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                </div>
+                <img 
+                  src={member.image} 
+                  alt={member.name} 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
                 
-                {/* Team Member Info */}
-                <div className="p-6">
-                  <h3 className="text-xl font-dosis font-semibold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">
-                    {member.name}
-                  </h3>
-                  <p className="text-emerald-600 text-sm mb-3 font-medium">{member.role}</p>
-                  <p className="text-gray-600 text-sm mb-6 leading-relaxed">
-                    {member.bio}
-                  </p>
-                  
-                  {/* Contact Info (shown on hover) */}
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-xs text-gray-500 mb-1">{member.phone}</p>
-                    <p className="text-xs text-gray-500">{member.email}</p>
+                {/* Hover Overlay - Full Cover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 className="text-2xl font-dosis font-bold text-white mb-1">{member.name}</h3>
+                    <p className="text-emerald-400 font-medium mb-4">{member.role}</p>
+                    <p className="text-white/90 text-sm mb-6">{member.bio}</p>
+                    
+                    {/* Contact Info */}
+                    <div className="mb-6">
+                      <a href={`tel:${member.phone}`} className="block text-white hover:text-emerald-400 transition-colors mb-2 font-medium">
+                        <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        {member.phone}
+                      </a>
+                      <a href={`mailto:${member.email}`} className="block text-white hover:text-emerald-400 transition-colors font-medium">
+                        <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        {member.email}
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -279,61 +295,75 @@ const AboutUs = () => {
           {/* Section Header */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2 mb-6">
-              <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">🏆 AWARDS</span>
+              <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">🏆 RECOGNITION</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
-              Our <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">Achievements</span>
+              Awards & <span className="text-emerald-600">Accolades</span>
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
-              Recognition for our commitment to excellence and innovation
+              Celebrating excellence in real estate services
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {awards.map((award, index) => (
-              <div key={index} className="bg-white rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-gray-100 group text-center">
+              <div key={index} className="bg-white rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-gray-100 group">
                 {/* Award Icon */}
-                <div className="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 mx-auto group-hover:bg-emerald-100 transition-colors duration-300">
+                <div className="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-100 transition-colors duration-300">
                   {React.cloneElement(award.icon, {
                     className: "w-8 h-8 text-emerald-600 group-hover:text-emerald-700 transition-colors duration-300"
                   })}
                 </div>
                 
                 {/* Award Content */}
-                <h3 className="text-lg font-dosis font-semibold text-gray-900 mb-2">{award.title}</h3>
+                <h3 className="text-xl font-dosis font-semibold text-gray-900 mb-2">{award.title}</h3>
                 <p className="text-gray-600 text-sm mb-2 font-medium">{award.organization}</p>
-                <p className="text-emerald-600 font-medium text-sm">{award.year}</p>
+                <p className="text-emerald-600 font-medium">{award.year}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-slate-800 mb-6 leading-tight">
-            Ready to Work With <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">Us?</span>
-          </h2>
-          <p className="text-lg text-slate-600 mb-10 max-w-xl mx-auto font-light leading-relaxed">
-            Whether you're buying, selling, or investing, our experienced team is here to guide you through every step of your real estate journey.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link 
-              to="/contact" 
-              className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
-            >
-              Contact Us
-            </Link>
-            <Link 
-              to="/properties" 
-              className="bg-transparent border border-slate-300 hover:border-emerald-500 text-slate-700 hover:text-emerald-600 font-medium py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
-            >
-              Browse Properties
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* CTA Section */}
+      <section className="relative py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden">
+  {/* Subtle background texture */}
+  <div className="absolute inset-0 opacity-5">
+    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=10')] bg-cover bg-center"></div>
+  </div>
+
+  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 className="text-3xl md:text-4xl font-dosis font-medium mb-6 leading-tight">
+      Start Your <span className="text-emerald-400">Property Journey</span> Today
+    </h2>
+    
+    <p className="text-lg text-gray-300 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+      Our expert agents are ready to guide you through every step
+    </p>
+    
+    <div className="flex flex-col sm:flex-row justify-center gap-6">
+      <Link 
+        to="/contact" 
+        className="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+      >
+        Connect With Us
+        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      </Link>
+      
+      <Link 
+        to="/properties" 
+        className="inline-flex items-center justify-center bg-transparent border-2 border-emerald-400 hover:border-emerald-300 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+      >
+        Explore Properties
+        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </Link>
+    </div>
+  </div>
+</section>
     </div>
   );
 };

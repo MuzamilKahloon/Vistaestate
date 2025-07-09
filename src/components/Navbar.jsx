@@ -1,121 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navItems = [
+    { 
+      path: '/', 
+      label: 'Home',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      )
+    },
+    { 
+      path: '/aboutus', 
+      label: 'About Us',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      )
+    },
+    { 
+      path: '/blog', 
+      label: 'Blog',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+        </svg>
+      )
+    },
+    { 
+      path: '/agents', 
+      label: 'Our Agents',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      )
+    },
+    { 
+      path: '/contact', 
+      label: 'Contact',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      )
+    }
+  ];
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-4'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="text-2xl font-bold text-gray-900 hover:text-amber-600 transition-colors">
-              <span className="text-amber-600">Vista</span>Estate
-            </Link>
-          </div>
+          <Link to="/" className="flex items-center">
+            <span className="text-2xl font-dosis font-bold text-slate-800">
+              <span className="text-emerald-600">Vista</span>Estate
+            </span>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             <div className="flex space-x-6">
-              <Link 
-                to="/" 
-                className="text-gray-700 hover:text-amber-600 px-3 py-2 font-medium transition-colors relative group"
-              >
-                Home
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              
-              <div className="relative">
-                <button 
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="text-gray-700 hover:text-amber-600 px-3 py-2 font-medium flex items-center transition-colors relative group"
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="group relative px-3 py-2 font-medium text-slate-700 hover:text-emerald-600 transition-colors"
                 >
-                  Properties
-                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ml-1 transition-transform ${isDropdownOpen ? 'transform rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-                </button>
-                {isDropdownOpen && (
-                  <div 
-                    className="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-50 border border-gray-100"
-                    onMouseLeave={() => setIsDropdownOpen(false)}
-                  >
-                    <Link 
-                      to="/properties" 
-                      className="block px-4 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                    >
-                      All Properties
-                    </Link>
-                    <Link 
-                      to="/properties?type=house" 
-                      className="block px-4 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                    >
-                      Houses
-                    </Link>
-                    <Link 
-                      to="/properties?type=apartment" 
-                      className="block px-4 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                    >
-                      Apartments
-                    </Link>
-                    <Link 
-                      to="/properties?type=villa" 
-                      className="block px-4 py-3 text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                    >
-                      Villas
-                    </Link>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-slate-500 group-hover:text-emerald-600 transition-colors">
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
                   </div>
-                )}
-              </div>
-              
-              <Link 
-                to="/about" 
-                className="text-gray-700 hover:text-amber-600 px-3 py-2 font-medium transition-colors relative group"
-              >
-                About Us
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              
-              <Link 
-                to="/blog" 
-                className="text-gray-700 hover:text-amber-600 px-3 py-2 font-medium transition-colors relative group"
-              >
-                Blog
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              
-              <Link 
-                to="/agents" 
-                className="text-gray-700 hover:text-amber-600 px-3 py-2 font-medium transition-colors relative group"
-              >
-                Our Agents
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              
-              <Link 
-                to="/contact" 
-                className="text-gray-700 hover:text-amber-600 px-3 py-2 font-medium transition-colors relative group"
-              >
-                Contact
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              ))}
             </div>
 
-            <div className="flex items-center space-x-4 ml-6">
+            <div className="ml-6">
               <Link 
                 to="/login" 
-                className="text-gray-700 hover:text-amber-600 px-3 py-2 font-medium transition-colors"
+                className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg"
               >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
                 Login
-              </Link>
-              <Link 
-                to="/submit-property" 
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg"
-              >
-                Submit Property
               </Link>
             </div>
           </div>
@@ -124,134 +109,52 @@ const Navbar = () => {
           <div className="lg:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-amber-600 focus:outline-none transition-colors"
+              className="inline-flex items-center justify-center p-2 rounded-md text-slate-700 hover:text-emerald-600 focus:outline-none transition-colors"
               aria-label="Toggle menu"
             >
-              <svg
-                className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              <svg
-                className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              {isMenuOpen ? (
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div className={`${isMenuOpen ? 'block' : 'hidden'} lg:hidden bg-white border-t border-gray-100`}>
-        <div className="px-4 pt-2 pb-3 space-y-1">
-          <Link
-            to="/"
-            className="block px-3 py-3 text-gray-700 hover:text-amber-600 font-medium transition-colors border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Home
-          </Link>
-          
-          <div className="border-b border-gray-100">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full flex justify-between items-center px-3 py-3 text-gray-700 hover:text-amber-600 font-medium transition-colors"
+      <div className={`${isMenuOpen ? 'block' : 'hidden'} lg:hidden bg-white shadow-xl`}>
+        <div className="px-4 pt-2 pb-4 space-y-2">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="group flex items-center px-4 py-3 text-slate-700 hover:text-emerald-600 font-medium transition-colors rounded-lg hover:bg-emerald-50"
+              onClick={() => setIsMenuOpen(false)}
             >
-              Properties
-              <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 transition-transform ${isDropdownOpen ? 'transform rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-            {isDropdownOpen && (
-              <div className="pl-4 pb-2">
-                <Link 
-                  to="/properties" 
-                  className="block px-3 py-2 text-gray-600 hover:text-amber-600 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  All Properties
-                </Link>
-                <Link 
-                  to="/properties?type=house" 
-                  className="block px-3 py-2 text-gray-600 hover:text-amber-600 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Houses
-                </Link>
-                <Link 
-                  to="/properties?type=apartment" 
-                  className="block px-3 py-2 text-gray-600 hover:text-amber-600 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Apartments
-                </Link>
-                <Link 
-                  to="/properties?type=villa" 
-                  className="block px-3 py-2 text-gray-600 hover:text-amber-600 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Villas
-                </Link>
-              </div>
-            )}
-          </div>
-          
-          <Link
-            to="/aboutus"
-            className="block px-3 py-3 text-gray-700 hover:text-amber-600 font-medium transition-colors border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            About Us
-          </Link>
-          
-          <Link
-            to="/blog"
-            className="block px-3 py-3 text-gray-700 hover:text-amber-600 font-medium transition-colors border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Blog
-          </Link>
-          
-          <Link
-            to="/agents"
-            className="block px-3 py-3 text-gray-700 hover:text-amber-600 font-medium transition-colors border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Our Agents
-          </Link>
-          
-          <Link
-            to="/contact"
-            className="block px-3 py-3 text-gray-700 hover:text-amber-600 font-medium transition-colors border-b border-gray-100"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Contact
-          </Link>
+              <span className="text-slate-500 group-hover:text-emerald-600 mr-3 transition-colors">
+                {item.icon}
+              </span>
+              <span>{item.label}</span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+          ))}
         </div>
         
-        <div className="px-4 pt-3 pb-4 border-t border-gray-100">
+        <div className="px-4 pb-4">
           <Link
             to="/login"
-            className="block w-full px-4 py-2.5 text-center text-gray-700 hover:text-amber-600 font-medium transition-colors mb-3"
+            className="flex items-center justify-center px-4 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg"
             onClick={() => setIsMenuOpen(false)}
           >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
             Login
-          </Link>
-          <Link
-            to="/submit-property"
-            className="block w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-center rounded-lg font-medium hover:from-amber-600 hover:to-amber-700 transition-all duration-300 shadow-md"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Submit Property
           </Link>
         </div>
       </div>

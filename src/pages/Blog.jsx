@@ -122,60 +122,73 @@ const Blog = () => {
   const featuredPost = blogPosts.find(post => post.featured);
 
   return (
-    <div className="blog-page">
+    <div className="font-quicksand antialiased text-slate-700 bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gray-900 text-white py-32">
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">VistaEstate Blog</h1>
-            <p className="text-xl mb-8">Expert insights, market trends, and real estate advice</p>
-            <div className="flex justify-center space-x-4">
-              <Link to="/" className="text-white hover:text-blue-300">Home</Link>
-              <span>/</span>
-              <span className="text-blue-400">Blog</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section className="relative h-screen w-full flex items-center justify-center bg-gray-900 overflow-hidden">
+  <div className="absolute inset-0">
+    <img 
+      src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+      alt="Luxury Home" 
+      className="w-full h-full object-cover"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/50 to-transparent"></div>
+  </div>
+  
+  <div className="relative z-10 w-full max-w-7xl px-6 sm:px-8 mx-auto">
+    <div className="flex flex-col items-center justify-center">
+      <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
+        <span className="text-emerald-400 font-medium text-xs tracking-wide whitespace-nowrap">📖 OUR BLOG</span>
+      </div>
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-dosis font-medium text-white mb-4 leading-tight text-center">
+        Real Estate <span className="text-emerald-400">Insights</span>
+      </h1>
+      <p className="text-lg md:text-xl text-white/80 font-light mb-8 leading-relaxed max-w-2xl mx-auto text-center">
+        Expert advice, market trends, and property tips from our team
+      </p>
+    </div>
+  </div>
+</section>
 
       {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Blog Posts Column */}
             <div className="lg:w-2/3">
               {/* Featured Post (if exists) */}
               {featuredPost && (
-                <div className="featured-post mb-12 bg-white rounded-lg overflow-hidden shadow-lg">
+                <div className="featured-post mb-12 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                   <div className="relative">
                     <img src={featuredPost.image} alt={featuredPost.title} className="w-full h-96 object-cover" />
-                    <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                    <div className="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium">
                       Featured
                     </div>
                   </div>
-                  <div className="p-6">
-                    <div className="flex items-center text-gray-600 mb-4">
+                  <div className="p-8">
+                    <div className="flex items-center text-gray-500 text-sm mb-4">
                       <span className="mr-4">{featuredPost.date}</span>
                       <span className="mr-4">By {featuredPost.author}</span>
                       <span className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                         {featuredPost.comments} Comments
                       </span>
                     </div>
-                    <h2 className="text-2xl font-bold mb-4">
-                      <Link to={`/blog/${featuredPost.id}`} className="hover:text-blue-600 transition duration-300">
+                    <h2 className="text-2xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
+                      <Link to={`/blog/${featuredPost.id}`} className="hover:text-emerald-600 transition duration-300">
                         {featuredPost.title}
                       </Link>
                     </h2>
                     <p className="text-gray-600 mb-6">{featuredPost.excerpt}</p>
                     <Link 
                       to={`/blog/${featuredPost.id}`} 
-                      className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition duration-300"
+                      className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                     >
                       Read More
+                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
                     </Link>
                   </div>
                 </div>
@@ -187,7 +200,7 @@ const Blog = () => {
                   <button
                     key={category.id}
                     onClick={() => setActiveCategory(category.id)}
-                    className={`px-4 py-2 rounded-full ${activeCategory === category.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${activeCategory === category.id ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                   >
                     {category.name}
                   </button>
@@ -199,11 +212,11 @@ const Blog = () => {
                 <input
                   type="text"
                   placeholder="Search articles..."
-                  className="w-full p-4 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-4 pl-12 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition duration-200"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400 absolute left-4 top-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 absolute left-4 top-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -212,32 +225,35 @@ const Blog = () => {
               {filteredPosts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {filteredPosts.filter(post => !post.featured).map(post => (
-                    <div key={post.id} className="blog-post bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <div key={post.id} className="blog-post bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition duration-300">
                       <div className="relative">
                         <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
-                        <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                        <div className="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium">
                           {categories.find(cat => cat.id === post.category)?.name}
                         </div>
                       </div>
                       <div className="p-6">
-                        <div className="flex items-center text-gray-600 text-sm mb-3">
+                        <div className="flex items-center text-gray-500 text-xs mb-3">
                           <span className="mr-4">{post.date}</span>
                           <span>By {post.author}</span>
                         </div>
-                        <h3 className="text-xl font-bold mb-3">
-                          <Link to={`/blog/${post.id}`} className="hover:text-blue-600 transition duration-300">
+                        <h3 className="text-xl font-dosis font-medium text-slate-800 mb-3 leading-tight">
+                          <Link to={`/blog/${post.id}`} className="hover:text-emerald-600 transition duration-300">
                             {post.title}
                           </Link>
                         </h3>
-                        <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                        <p className="text-gray-600 mb-4 text-sm">{post.excerpt}</p>
                         <div className="flex justify-between items-center">
                           <Link 
                             to={`/blog/${post.id}`} 
-                            className="text-blue-600 hover:text-blue-800 font-medium"
+                            className="text-emerald-600 hover:text-emerald-800 font-medium text-sm flex items-center"
                           >
                             Read More
+                            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
                           </Link>
-                          <span className="flex items-center text-gray-600 text-sm">
+                          <span className="flex items-center text-gray-500 text-xs">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
@@ -249,35 +265,35 @@ const Blog = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
+                <div className="text-center py-12 bg-white rounded-xl shadow-md p-8 border border-gray-100">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h3 className="text-xl font-bold mb-2">No articles found</h3>
-                  <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+                  <h3 className="text-xl font-dosis font-medium text-slate-800 mb-2">No articles found</h3>
+                  <p className="text-gray-600 text-sm">Try adjusting your search or filter criteria</p>
                 </div>
               )}
 
               {/* Pagination */}
               <div className="mt-12 flex justify-center">
                 <nav className="flex items-center space-x-2">
-                  <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium">
                     Previous
                   </button>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                  <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium">
                     1
                   </button>
-                  <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium">
                     2
                   </button>
-                  <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium">
                     3
                   </button>
                   <span className="px-2 text-gray-600">...</span>
-                  <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium">
                     8
                   </button>
-                  <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-medium">
                     Next
                   </button>
                 </nav>
@@ -286,24 +302,34 @@ const Blog = () => {
 
             {/* Sidebar Column */}
             <div className="lg:w-1/3">
-              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-                <h3 className="text-xl font-bold mb-6 pb-3 border-b border-gray-200">About The Blog</h3>
-                <p className="text-gray-600 mb-4">
+              <div className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-100">
+                <div className="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2 mb-6">
+                  <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">ℹ️ ABOUT THE BLOG</span>
+                </div>
+                <h2 className="text-2xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
+                  Real Estate <span className="text-emerald-600">Knowledge</span>
+                </h2>
+                <p className="text-gray-600 text-sm mb-4">
                   The VistaEstate blog provides expert insights, market trends, and practical advice for buyers, sellers, and investors in today's dynamic real estate market.
                 </p>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm">
                   Our team of experienced agents and analysts share their knowledge to help you make informed real estate decisions.
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-                <h3 className="text-xl font-bold mb-6 pb-3 border-b border-gray-200">Categories</h3>
-                <ul className="space-y-3">
+              <div className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-100">
+                <div className="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2 mb-6">
+                  <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">🗂️ CATEGORIES</span>
+                </div>
+                <h2 className="text-2xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
+                  Browse By <span className="text-emerald-600">Topic</span>
+                </h2>
+                <ul className="space-y-2">
                   {categories.filter(cat => cat.id !== 'all').map(category => (
                     <li key={category.id}>
                       <button 
                         onClick={() => setActiveCategory(category.id)}
-                        className={`flex justify-between w-full px-3 py-2 rounded ${activeCategory === category.id ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
+                        className={`flex justify-between w-full px-4 py-3 rounded-lg text-sm ${activeCategory === category.id ? 'bg-emerald-50 text-emerald-600' : 'hover:bg-gray-50 text-gray-700'}`}
                       >
                         <span>{category.name}</span>
                         <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
@@ -315,21 +341,26 @@ const Blog = () => {
                 </ul>
               </div>
 
-              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-                <h3 className="text-xl font-bold mb-6 pb-3 border-b border-gray-200">Recent Comments</h3>
+              <div className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-100">
+                <div className="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2 mb-6">
+                  <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">💬 RECENT COMMENTS</span>
+                </div>
+                <h2 className="text-2xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
+                  Community <span className="text-emerald-600">Feedback</span>
+                </h2>
                 <ul className="space-y-4">
                   {recentComments.map(comment => (
                     <li key={comment.id} className="flex items-start">
                       <div className="flex-shrink-0 mr-3">
-                        <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                        <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-medium">
                           {comment.author.charAt(0)}
                         </div>
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-gray-800">{comment.author}</div>
+                        <div className="text-sm font-medium text-slate-800">{comment.author}</div>
                         <div className="text-sm text-gray-600">{comment.text}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          On <Link to="#" className="text-blue-600 hover:underline">{comment.post}</Link> • {comment.time}
+                          On <Link to="#" className="text-emerald-600 hover:underline">{comment.post}</Link> • {comment.time}
                         </div>
                       </div>
                     </li>
@@ -337,25 +368,30 @@ const Blog = () => {
                 </ul>
               </div>
 
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-xl font-bold mb-6 pb-3 border-b border-gray-200">Subscribe</h3>
-                <p className="text-gray-600 mb-4">Get the latest articles and news delivered to your inbox</p>
+              <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div className="inline-flex items-center bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2 mb-6">
+                  <span className="text-emerald-600 font-medium text-xs tracking-wide whitespace-nowrap">✉️ SUBSCRIBE</span>
+                </div>
+                <h2 className="text-2xl font-dosis font-medium text-slate-800 mb-4 leading-tight">
+                  Stay <span className="text-emerald-600">Updated</span>
+                </h2>
+                <p className="text-gray-600 text-sm mb-4">Get the latest articles and news delivered to your inbox</p>
                 <form className="space-y-4">
                   <input 
                     type="text" 
                     placeholder="Your Name" 
-                    className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
                   />
                   <input 
                     type="email" 
                     placeholder="Your Email" 
-                    className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
                   />
                   <button 
                     type="submit" 
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded transition duration-300"
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-sm"
                   >
-                    Subscribe
+                    Subscribe Now
                   </button>
                 </form>
               </div>
