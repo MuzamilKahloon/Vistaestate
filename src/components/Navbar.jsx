@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,6 +14,12 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close menus when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsDashboardOpen(false);
+  }, [location.pathname]);
 
   const navItems = [
     { 
@@ -61,6 +69,36 @@ const Navbar = () => {
     }
   ];
 
+  const dashboardItems = [
+    {
+      path: "/leadpooldash",
+      label: "Lead Pool",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+      )
+    },
+    {
+      path: "/agentdash",
+      label: "Agent",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      )
+    },
+    {
+      path: "/workerdash",
+      label: "Worker",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      )
+    }
+  ];
+
   return (
     <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-white py-4'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,17 +117,52 @@ const Navbar = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className="group relative px-3 py-2 font-medium text-slate-700 hover:text-emerald-600 transition-colors"
+                  className={`group relative px-3 py-2 font-medium ${location.pathname === item.path ? 'text-emerald-600' : 'text-slate-700 hover:text-emerald-600'} transition-colors`}
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="text-slate-500 group-hover:text-emerald-600 transition-colors">
+                    <span className={`${location.pathname === item.path ? 'text-emerald-600' : 'text-slate-500 group-hover:text-emerald-600'} transition-colors`}>
                       {item.icon}
                     </span>
                     <span>{item.label}</span>
                   </div>
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
+                  <span className={`absolute bottom-0 left-0 h-0.5 bg-emerald-600 transition-all duration-300 ${location.pathname === item.path ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
                 </Link>
               ))}
+
+              {/* Dashboard Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsDashboardOpen(!isDashboardOpen)}
+                  className="group flex items-center px-3 py-2 font-medium text-slate-700 hover:text-emerald-600 transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-4 h-4 text-slate-500 group-hover:text-emerald-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    <span>Dashboards</span>
+                    <svg className={`w-4 h-4 transition-transform duration-200 ${isDashboardOpen ? 'transform rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
+                </button>
+
+                {isDashboardOpen && (
+                  <div className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
+                    {dashboardItems.map((item) => (
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className={`flex items-center px-4 py-2 ${location.pathname === item.path ? 'bg-emerald-50 text-emerald-600' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-600'} transition-colors`}
+                        onClick={() => setIsDashboardOpen(false)}
+                      >
+                        <span className={`${location.pathname === item.path ? 'text-emerald-600' : 'text-slate-500'} mr-3`}>{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="ml-6">
@@ -133,16 +206,52 @@ const Navbar = () => {
             <Link
               key={item.path}
               to={item.path}
-              className="group flex items-center px-4 py-3 text-slate-700 hover:text-emerald-600 font-medium transition-colors rounded-lg hover:bg-emerald-50"
+              className={`group flex items-center px-4 py-3 ${location.pathname === item.path ? 'text-emerald-600 bg-emerald-50' : 'text-slate-700 hover:text-emerald-600'} font-medium transition-colors rounded-lg hover:bg-emerald-50`}
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="text-slate-500 group-hover:text-emerald-600 mr-3 transition-colors">
+              <span className={`${location.pathname === item.path ? 'text-emerald-600' : 'text-slate-500 group-hover:text-emerald-600'} mr-3 transition-colors`}>
                 {item.icon}
               </span>
               <span>{item.label}</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
+
+          {/* Mobile Dashboard Dropdown */}
+          <div className="px-4 py-3">
+            <button
+              onClick={() => setIsDashboardOpen(!isDashboardOpen)}
+              className="flex items-center justify-between w-full text-slate-700 hover:text-emerald-600 font-medium"
+            >
+              <div className="flex items-center">
+                <svg className="w-4 h-4 text-slate-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span>Dashboards</span>
+              </div>
+              <svg className={`w-4 h-4 transition-transform duration-200 ${isDashboardOpen ? 'transform rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {isDashboardOpen && (
+              <div className="mt-2 pl-8 space-y-2">
+                {dashboardItems.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center px-4 py-2 ${location.pathname === item.path ? 'text-emerald-600 bg-emerald-50' : 'text-slate-700 hover:text-emerald-600'} rounded-lg hover:bg-emerald-50`}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setIsDashboardOpen(false);
+                    }}
+                  >
+                    <span className={`${location.pathname === item.path ? 'text-emerald-600' : 'text-slate-500'} mr-3`}>{item.icon}</span>
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         
         <div className="px-4 pb-4">
