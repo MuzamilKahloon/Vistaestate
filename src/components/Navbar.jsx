@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
+import logo from '../../public/images/logo1.jpg'
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -66,14 +66,23 @@ const Navbar = () => {
       )
     },
     { 
-      path: '/contact', 
-      label: 'Contact',
+      path: '/worker', 
+      label: 'Workers',
       icon: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       )
-    }
+    },
+    // { 
+    //   path: '/contact', 
+    //   label: 'Contact',
+    //   icon: (
+    //     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    //       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    //     </svg>
+    //   )
+    // }
   ];
 
   const dashboardItems = [
@@ -151,11 +160,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <span className="text-2xl font-dosis font-bold text-slate-800">
-              <span className="text-emerald-600">Vista</span>Estate
-            </span>
+          <Link to="/" className="flex items-center space-x-2">
+           <img src={logo} alt="VistaEstate Logo" className="h-10 w-auto ml-5 mb-2" />
+  
           </Link>
+
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">

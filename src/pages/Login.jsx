@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -7,13 +8,21 @@ const AuthPage = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: ''
   });
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [activeSocial, setActiveSocial] = useState(null);
   const navigate = useNavigate();
+
+  const roles = [
+    { value: 'lead_pool_manager', label: 'Lead Pool Manager' },
+    { value: 'super_admin', label: 'Super Admin' },
+    { value: 'agent', label: 'Agent' },
+    { value: 'worker', label: 'Worker' }
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,6 +57,10 @@ const AuthPage = () => {
       
       if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = 'Passwords do not match';
+      }
+
+      if (!formData.role) {
+        newErrors.role = 'Please select a role';
       }
     }
     
@@ -102,11 +115,16 @@ const AuthPage = () => {
   ];
 
   return (
-    <div className="font-quicksand min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 p-4">
-      <div className="w-full max-w-6xl bg-white rounded-xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
+    <div className="font-quicksand min-h-screen flex items-center justify-center bg-[#E2E2E2] p-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-6xl bg-white rounded-xl shadow-xl overflow-hidden flex flex-col lg:flex-row"
+      >
         {/* Left Side - Image */}
         <div className="lg:w-1/2 relative h-64 lg:h-auto">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-slate-800/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#153E42]/80 to-[#439CB0]/50"></div>
           <img 
             src="https://plus.unsplash.com/premium_photo-1674676471104-3c4017645e6f?q=80&w=670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
             alt="Luxury Modern Home"
@@ -121,7 +139,7 @@ const AuthPage = () => {
             </p>
             <div className="flex mt-4 space-x-2">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className={`h-1 ${i === 1 ? 'w-8 bg-emerald-400' : 'w-4 bg-white/50'}`}></div>
+                <div key={i} className={`h-1 ${i === 1 ? 'w-8 bg-[#439CB0]' : 'w-4 bg-white/50'}`}></div>
               ))}
             </div>
           </div>
@@ -133,21 +151,21 @@ const AuthPage = () => {
             {/* Logo */}
             <div className="text-center mb-8">
               <Link to="/" className="inline-block">
-                <span className="text-3xl font-dosis font-bold text-slate-800">VistaEstate</span>
+                <span className="text-3xl font-dosis font-bold text-[#262626]">VistaEstate</span>
               </Link>
             </div>
 
             {/* Toggle */}
-            <div className="flex mb-8 border-b border-slate-200">
+            <div className="flex mb-8 border-b border-[#262626]/20">
               <button
                 onClick={() => setIsLogin(true)}
-                className={`flex-1 py-3 font-medium ${isLogin ? 'text-slate-900 border-b-2 border-emerald-600' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`flex-1 py-3 font-medium ${isLogin ? 'text-[#262626] border-b-2 border-[#439CB0]' : 'text-[#262626]/60 hover:text-[#262626]'}`}
               >
                 Sign In
               </button>
               <button
                 onClick={() => setIsLogin(false)}
-                className={`flex-1 py-3 font-medium ${!isLogin ? 'text-slate-900 border-b-2 border-emerald-600' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`flex-1 py-3 font-medium ${!isLogin ? 'text-[#262626] border-b-2 border-[#439CB0]' : 'text-[#262626]/60 hover:text-[#262626]'}`}
               >
                 Register
               </button>
@@ -155,37 +173,76 @@ const AuthPage = () => {
 
             {/* Form Error */}
             {errors.form && (
-              <div className="mb-6 p-4 bg-red-50 rounded-lg border border-red-100">
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-red-50 rounded-lg border border-red-100"
+              >
                 <div className="flex items-center text-red-600">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <span className="text-sm">{errors.form}</span>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {!isLogin && (
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${errors.name ? 'border-red-500' : 'border-slate-300'} focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-transparent transition duration-200`}
-                    placeholder="John Doe"
-                  />
-                  {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-                </div>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <label htmlFor="name" className="block text-sm font-medium text-[#262626] mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 rounded-lg border ${errors.name ? 'border-red-500' : 'border-[#262626]/30'} focus:outline-none focus:ring-1 focus:ring-[#439CB0] focus:border-transparent transition duration-200`}
+                      placeholder="John Doe"
+                    />
+                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 }}
+                  >
+                    <label htmlFor="role" className="block text-sm font-medium text-[#262626] mb-1">
+                      Role *
+                    </label>
+                    <select
+                      id="role"
+                      name="role"
+                      value={formData.role}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 rounded-lg border ${errors.role ? 'border-red-500' : 'border-[#262626]/30'} focus:outline-none focus:ring-1 focus:ring-[#439CB0] focus:border-transparent transition duration-200 appearance-none bg-white`}
+                    >
+                      <option value="">Select your role</option>
+                      {roles.map((role) => (
+                        <option key={role.value} value={role.value}>
+                          {role.label}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role}</p>}
+                  </motion.div>
+                </>
               )}
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <label htmlFor="email" className="block text-sm font-medium text-[#262626] mb-1">
                   Email Address *
                 </label>
                 <input
@@ -194,14 +251,18 @@ const AuthPage = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-500' : 'border-slate-300'} focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-transparent transition duration-200`}
+                  className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-500' : 'border-[#262626]/30'} focus:outline-none focus:ring-1 focus:ring-[#439CB0] focus:border-transparent transition duration-200`}
                   placeholder="your@email.com"
                 />
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-              </div>
+              </motion.div>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <label htmlFor="password" className="block text-sm font-medium text-[#262626] mb-1">
                   Password *
                 </label>
                 <input
@@ -210,15 +271,19 @@ const AuthPage = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${errors.password ? 'border-red-500' : 'border-slate-300'} focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-transparent transition duration-200`}
+                  className={`w-full px-4 py-3 rounded-lg border ${errors.password ? 'border-red-500' : 'border-[#262626]/30'} focus:outline-none focus:ring-1 focus:ring-[#439CB0] focus:border-transparent transition duration-200`}
                   placeholder="••••••••"
                 />
                 {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-              </div>
+              </motion.div>
 
               {!isLogin && (
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 mb-1">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#262626] mb-1">
                     Confirm Password *
                   </label>
                   <input
@@ -227,11 +292,11 @@ const AuthPage = () => {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${errors.confirmPassword ? 'border-red-500' : 'border-slate-300'} focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-transparent transition duration-200`}
+                    className={`w-full px-4 py-3 rounded-lg border ${errors.confirmPassword ? 'border-red-500' : 'border-[#262626]/30'} focus:outline-none focus:ring-1 focus:ring-[#439CB0] focus:border-transparent transition duration-200`}
                     placeholder="••••••••"
                   />
                   {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
-                </div>
+                </motion.div>
               )}
 
               <div className="flex items-center justify-between">
@@ -241,9 +306,9 @@ const AuthPage = () => {
                     id="remember-me"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded transition duration-200"
+                    className="h-4 w-4 text-[#439CB0] focus:ring-[#439CB0] border-[#262626]/30 rounded transition duration-200"
                   />
-                  <label htmlFor="remember-me" className="ml-2 text-sm text-slate-700">
+                  <label htmlFor="remember-me" className="ml-2 text-sm text-[#262626]">
                     Remember me
                   </label>
                 </div>
@@ -251,17 +316,19 @@ const AuthPage = () => {
                 {isLogin && (
                   <Link 
                     to="/forgot-password" 
-                    className="text-sm text-slate-600 hover:text-emerald-600 hover:underline transition duration-200"
+                    className="text-sm text-[#262626]/60 hover:text-[#439CB0] hover:underline transition duration-200"
                   >
                     Forgot password?
                   </Link>
                 )}
               </div>
 
-              <button
+              <motion.button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition duration-300 flex items-center justify-center ${isLoading ? 'opacity-80 cursor-not-allowed' : 'shadow-md hover:shadow-lg'}`}
+                whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                className={`w-full py-3 px-4 bg-[#439CB0] hover:bg-[#153E42] text-white font-medium rounded-lg transition duration-300 flex items-center justify-center ${isLoading ? 'opacity-80 cursor-not-allowed' : 'shadow-md hover:shadow-lg'}`}
               >
                 {isLoading ? (
                   <>
@@ -274,34 +341,35 @@ const AuthPage = () => {
                 ) : (
                   isLogin ? 'Sign In' : 'Create Account'
                 )}
-              </button>
+              </motion.button>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-slate-200">
-              <p className="text-sm text-slate-600 text-center mb-4">
+            <div className="mt-8 pt-6 border-t border-[#262626]/20">
+              <p className="text-sm text-[#262626]/60 text-center mb-4">
                 Or continue with
               </p>
               <div className="flex justify-center space-x-3">
                 {socialMedia.map((social) => (
-                  <button 
+                  <motion.button 
                     key={social.name}
-                    className={`p-3 rounded-lg transition-all duration-300 border border-slate-200 hover:border-transparent ${activeSocial === social.name ? `${social.color} bg-slate-100` : 'bg-white text-slate-700 hover:bg-slate-50'}`}
+                    whileHover={{ y: -3 }}
+                    className={`p-3 rounded-lg transition-all duration-300 border border-[#262626]/20 hover:border-transparent ${activeSocial === social.name ? `${social.color} bg-[#262626]/10` : 'bg-white text-[#262626] hover:bg-[#262626]/5'}`}
                     onMouseEnter={() => setActiveSocial(social.name)}
                     onMouseLeave={() => setActiveSocial(null)}
                   >
                     {social.icon}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </div>
 
-            <div className="mt-6 text-center text-sm text-slate-600">
+            <div className="mt-6 text-center text-sm text-[#262626]/60">
               {isLogin ? (
                 <>
                   Don't have an account?{' '}
                   <button 
                     onClick={() => setIsLogin(false)}
-                    className="text-emerald-600 hover:text-emerald-700 hover:underline font-medium transition duration-200"
+                    className="text-[#439CB0] hover:text-[#153E42] hover:underline font-medium transition duration-200"
                   >
                     Register
                   </button>
@@ -311,7 +379,7 @@ const AuthPage = () => {
                   Already have an account?{' '}
                   <button 
                     onClick={() => setIsLogin(true)}
-                    className="text-emerald-600 hover:text-emerald-700 hover:underline font-medium transition duration-200"
+                    className="text-[#439CB0] hover:text-[#153E42] hover:underline font-medium transition duration-200"
                   >
                     Sign in
                   </button>
@@ -320,7 +388,7 @@ const AuthPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

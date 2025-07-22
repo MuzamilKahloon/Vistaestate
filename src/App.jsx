@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import Aboutus from './pages/Aboutus';
 import Blog from './pages/Blog';
 import Agents from './pages/Agents';
-import Contact from './pages/Contact';
+// import Contact from './pages/Contact';
 import Login from './pages/Login';
 import LeadPool from './dashboards/LeadPoolDash';
 import Agent from './dashboards/AgentDash';
@@ -14,7 +14,7 @@ import Area from './pages/Area';
 import LeadGeneration from './pages/LeadGeneration';
 import Marketing from './pages/Marketing';
 import WebDev from "./pages/WebDev";
-
+import WorkerP from "./pages/Worker";
 const App = () => {
   return (
     <Router>
@@ -24,7 +24,8 @@ const App = () => {
         <Route path="/aboutus" element={<Aboutus />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/agents" element={<Agents />} />
-        <Route path="/contact" element={<Contact />} />
+                <Route path="/worker" element={<WorkerP />} />
+        {/* <Route path="/contact" element={<Contact />} /> */}
         <Route path="/login" element={<Login />} />
         
         {/* Dashboard Routes */}
