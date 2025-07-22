@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion as MOTION } from 'framer-motion';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -116,7 +116,7 @@ const AuthPage = () => {
 
   return (
     <div className="font-quicksand min-h-screen flex items-center justify-center bg-[#E2E2E2] p-4">
-      <motion.div 
+      <MOTION.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -173,7 +173,7 @@ const AuthPage = () => {
 
             {/* Form Error */}
             {errors.form && (
-              <motion.div 
+              <MOTION.div 
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-6 p-4 bg-red-50 rounded-lg border border-red-100"
@@ -184,13 +184,13 @@ const AuthPage = () => {
                   </svg>
                   <span className="text-sm">{errors.form}</span>
                 </div>
-              </motion.div>
+              </MOTION.div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {!isLogin && (
                 <>
-                  <motion.div
+                  <MOTION.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
@@ -208,9 +208,9 @@ const AuthPage = () => {
                       placeholder="John Doe"
                     />
                     {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-                  </motion.div>
+                  </MOTION.div>
 
-                  <motion.div
+                  <MOTION.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.15 }}
@@ -233,11 +233,11 @@ const AuthPage = () => {
                       ))}
                     </select>
                     {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role}</p>}
-                  </motion.div>
+                  </MOTION.div>
                 </>
               )}
 
-              <motion.div
+              <MOTION.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
@@ -255,9 +255,9 @@ const AuthPage = () => {
                   placeholder="your@email.com"
                 />
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-              </motion.div>
+              </MOTION.div>
 
-              <motion.div
+              <MOTION.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
@@ -275,10 +275,10 @@ const AuthPage = () => {
                   placeholder="••••••••"
                 />
                 {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-              </motion.div>
+              </MOTION.div>
 
               {!isLogin && (
-                <motion.div
+                <MOTION.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
@@ -296,7 +296,7 @@ const AuthPage = () => {
                     placeholder="••••••••"
                   />
                   {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
-                </motion.div>
+                </MOTION.div>
               )}
 
               <div className="flex items-center justify-between">
@@ -323,7 +323,7 @@ const AuthPage = () => {
                 )}
               </div>
 
-              <motion.button
+              <MOTION.button
                 type="submit"
                 disabled={isLoading}
                 whileHover={{ scale: isLoading ? 1 : 1.02 }}
@@ -341,7 +341,7 @@ const AuthPage = () => {
                 ) : (
                   isLogin ? 'Sign In' : 'Create Account'
                 )}
-              </motion.button>
+              </MOTION.button>
             </form>
 
             <div className="mt-8 pt-6 border-t border-[#262626]/20">
@@ -350,7 +350,7 @@ const AuthPage = () => {
               </p>
               <div className="flex justify-center space-x-3">
                 {socialMedia.map((social) => (
-                  <motion.button 
+                  <MOTION.button 
                     key={social.name}
                     whileHover={{ y: -3 }}
                     className={`p-3 rounded-lg transition-all duration-300 border border-[#262626]/20 hover:border-transparent ${activeSocial === social.name ? `${social.color} bg-[#262626]/10` : 'bg-white text-[#262626] hover:bg-[#262626]/5'}`}
@@ -358,7 +358,7 @@ const AuthPage = () => {
                     onMouseLeave={() => setActiveSocial(null)}
                   >
                     {social.icon}
-                  </motion.button>
+                  </MOTION.button>
                 ))}
               </div>
             </div>
@@ -388,7 +388,7 @@ const AuthPage = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </MOTION.div>
     </div>
   );
 };
