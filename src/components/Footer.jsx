@@ -1,8 +1,76 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+
+  // GSAP refs
+  const footerRef = useRef(null);
+  const colRefs = useRef([]);
+  const newsletterRef = useRef(null);
+  const socialRefs = useRef([]);
+
+  useEffect(() => {
+    // Footer entrance
+    if (footerRef.current) {
+      gsap.fromTo(footerRef.current, { y: 80 }, {
+        y: 0, duration: 1.2, ease: 'power4.out', scrollTrigger: { trigger: footerRef.current, start: 'top 90%', end: 'bottom 60%', toggleActions: 'play none none reverse' }
+      });
+    }
+    // Columns entrance
+    if (colRefs.current.length) {
+      gsap.fromTo(colRefs.current,
+        { opacity: 0, y: 60, scale: 0.95, filter: 'blur(8px)', rotate: -6 },
+        {
+          opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', rotate: 0, duration: 1.1, stagger: 0.15, ease: 'power4.out', scrollTrigger: { trigger: footerRef.current, start: 'top 95%', end: 'bottom 60%', toggleActions: 'play none none reverse' }
+        }
+      );
+    }
+    // Newsletter entrance
+    if (newsletterRef.current) {
+      gsap.fromTo(newsletterRef.current, { opacity: 0, y: 40, scale: 0.97, filter: 'blur(8px)' }, {
+        opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1, ease: 'power4.out', scrollTrigger: { trigger: newsletterRef.current, start: 'top 98%', end: 'bottom 60%', toggleActions: 'play none none reverse' }
+      });
+    }
+    // Social links entrance
+    if (socialRefs.current.length) {
+      gsap.fromTo(socialRefs.current,
+        { opacity: 0, y: 30, scale: 0.92, filter: 'blur(8px)' },
+        {
+          opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.13, ease: 'power4.out', scrollTrigger: { trigger: footerRef.current, start: 'top 99%', end: 'bottom 60%', toggleActions: 'play none none reverse' }
+        }
+      );
+    }
+  }, []);
+
+  // Magic hover effect for links, icons, buttons
+  const handleFooterHover = (ref) => {
+    if (ref) {
+      gsap.to(ref, {
+        scale: 1.08,
+        boxShadow: '0 0 32px 8px #439CB0, 0 8px 32px 0 rgba(67,156,176,0.25)',
+        color: '#439CB0',
+        filter: 'brightness(1.08) saturate(1.2)',
+        duration: 0.32,
+        ease: 'power2.out',
+      });
+    }
+  };
+  const handleFooterLeave = (ref) => {
+    if (ref) {
+      gsap.to(ref, {
+        scale: 1,
+        boxShadow: '',
+        color: '',
+        filter: 'brightness(1) saturate(1)',
+        duration: 0.32,
+        ease: 'power2.in',
+      });
+    }
+  };
 
   const quickLinks = [
     { 
@@ -119,7 +187,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-[#153E42] text-white relative overflow-hidden">
+    <footer ref={footerRef} className="bg-[#153E42] text-white relative overflow-hidden" style={{ opacity: 1, filter: 'blur(0px)' }}>
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#439CB0]/20 via-transparent to-[#439CB0]/10"></div>
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#439CB0] via-[#439CB0] to-[#439CB0]"></div>
@@ -134,7 +202,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             
             {/* Company Info */}
-            <div className="lg:col-span-1">
+            <div ref={el => colRefs.current[0] = el} className="lg:col-span-1">
               <Link to="/" className="flex items-center group mb-6">
                 <div className="w-10 h-10 bg-gradient-to-br from-[#439CB0] to-[#153E42] rounded-xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,7 +250,7 @@ const Footer = () => {
             </div>
             
             {/* Quick Links */}
-            <div>
+            <div ref={el => colRefs.current[1] = el}>
               <h3 className="text-lg font-semibold mb-6 text-white relative">
                 Quick Links
                 <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-[#439CB0] to-[#153E42] rounded-full"></span>
@@ -207,7 +275,7 @@ const Footer = () => {
             </div>
             
             {/* Services */}
-            <div>
+            <div ref={el => colRefs.current[2] = el}>
               <h3 className="text-lg font-semibold mb-6 text-white relative">
                 Our Services
                 <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-[#439CB0] to-[#153E42] rounded-full"></span>
@@ -232,7 +300,7 @@ const Footer = () => {
             </div>
             
             {/* Locations */}
-            <div>
+            <div ref={el => colRefs.current[3] = el}>
               <h3 className="text-lg font-semibold mb-6 text-white relative">
                 Our Locations
                 <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-[#439CB0] to-[#153E42] rounded-full"></span>
@@ -259,7 +327,7 @@ const Footer = () => {
         </div>
         
         {/* Newsletter Section */}
-        <div className="py-8 border-t border-[#439CB0]/20">
+        <div ref={newsletterRef} className="py-8 border-t border-[#439CB0]/20">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="mb-6 md:mb-0">
               <h3 className="text-xl font-semibold text-white mb-2">Stay Updated</h3>
@@ -271,7 +339,11 @@ const Footer = () => {
                 placeholder="Enter your email" 
                 className="px-4 py-3 bg-[#153E42] border border-[#439CB0]/30 rounded-xl text-white placeholder-[#E2E2E2]/60 focus:outline-none focus:ring-2 focus:ring-[#439CB0] focus:border-transparent transition-all duration-300 min-w-[280px]"
               />
-              <button className="px-6 py-3 bg-[#439CB0] hover:bg-[#153E42] text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
+              <button
+                className="px-6 py-3 bg-[#439CB0] hover:bg-[#153E42] text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap"
+                onMouseEnter={e => handleFooterHover(e.currentTarget)}
+                onMouseLeave={e => handleFooterLeave(e.currentTarget)}
+              >
                 Subscribe
               </button>
             </div>
@@ -288,11 +360,14 @@ const Footer = () => {
             {/* Social Links */}
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
-                <a 
+                <a
                   key={index}
-                  href={social.url} 
+                  ref={el => socialRefs.current[index] = el}
+                  href={social.url}
                   className="w-10 h-10 bg-[#153E42] border border-[#439CB0]/30 rounded-xl flex items-center justify-center text-[#E2E2E2]/80 hover:text-white hover:bg-[#439CB0] hover:border-[#439CB0] transition-all duration-300 hover:scale-110 hover:shadow-lg"
                   aria-label={social.name}
+                  onMouseEnter={e => handleFooterHover(e.currentTarget)}
+                  onMouseLeave={e => handleFooterLeave(e.currentTarget)}
                 >
                   {social.icon}
                 </a>

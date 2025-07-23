@@ -20,16 +20,32 @@ const heroWords = [
 
 const subWords = [
   { text: 'Pay', className: 'text-white' },
-  { text: 'only', className: 'text-[#439CB0]' },
+  { text: 'only', className: 'text-white' },
   { text: 'for', className: 'text-white' },
-  { text: 'what', className: 'text-[#439CB0]' },
+  { text: 'what', className: 'text-white' },
   { text: 'you', className: 'text-white' },
-  { text: 'get.', className: 'text-[#439CB0]' },
+  { text: 'get.', className: 'text-white' },
   { text: 'No', className: 'text-white' },
-  { text: 'monthly', className: 'text-[#439CB0]' },
+  { text: 'monthly', className: 'text-white' },
   { text: 'commitment.', className: 'text-white' },
-  { text: 'Cancel', className: 'text-[#439CB0]' },
+  { text: 'Cancel', className: 'text-white' },
   { text: 'anytime', className: 'text-white' },
+];
+
+// Top US real estate brokerages logos (SVG/PNG URLs)
+const brokerages = [
+  { name: 'eXp Realty', logo: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRJtP7fl5eAtVpmwaewtDuuHGBeOxh3flmybJv80vkxKORdL63f' },
+  { name: 'Compass', logo: 'https://t2.gstatic.com/licensed-image?q=tbn:ANd9GcQ33polAhQr-fkb4zhIOxpsTlAab49nhMKj_1zSZsL1nWzXjWlPERQ7PHHbS7pfwn2R' },
+  { name: 'Re/Max', logo: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSo_pbkP5vfPVl9xukQ-EdYTlEFyyhLdiELto8yckFNldK8nVV1' },
+  { name: 'Weichert', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFhRmhpb6ECLMTAE7I_elVAb_-lIfj_TGq5si1p_r0GnnHUSua' },
+  { name: 'Coldwell Banker', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuZshAg43mwVth5n21WmrNFqshyf53o6Dox_DIwCgTohTZUWbx' },
+  { name: 'Keller Williams', logo: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQGlYrpOlU7S5Q_2vDea7V3ikzTtmbFTX8-gzPB4_wykUEafkFM' },
+  { name: 'Realty One Group', logo: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQvMIgpnFZXPDMPiJr6wz3iVDukiX6R6C6HDMynkP7ePDVavARd' },
+  { name: 'Redfin', logo: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRwnq2wQygpEmBytNu7CQMKunxhwKHq2Bk1pPbQlNmzdNuLTOdl' },
+  { name: 'Century 21', logo: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQnvm0h84lJeNqJi-SBB7_rqAohmpYWbxmzkL0Gpjso8Ys54M8Q' },
+  { name: 'Douglas Elliman', logo: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRkijWDhsR9tc1LyHY-oz6ZXFj_SG0K7jRgZ3eYf_s2HtFUDzxk' },
+  { name: 'Sotheby\'s International Realty', logo: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQTpJroyrLZWHjYJkZ7KcBLNKz63ddWCpzDbvA40poKjLEnzEZZ' },
+  { name: 'HomeServices of America', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlZLgnmzpG-osHqkMz89uoHCbpLrNU_LyJgnMnYQNwWeooiJkr' },
 ];
 
 const Home = () => {
@@ -930,6 +946,141 @@ const Home = () => {
     }
   };
 
+  // Marquee refs
+  const marqueeRef = useRef(null);
+  const marqueeInnerRef = useRef(null);
+
+  useEffect(() => {
+    if (marqueeInnerRef.current) {
+      // Duplicate logos for seamless loop
+      const marqueeWidth = marqueeInnerRef.current.scrollWidth / 2;
+      gsap.to(marqueeInnerRef.current, {
+        x: -marqueeWidth,
+        duration: 18,
+        ease: 'linear',
+        repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize(x => parseFloat(x) % -marqueeWidth),
+        },
+      });
+    }
+  }, []);
+
+  // Parallax/floating orb for the section
+  const orbAccentRef = useRef(null);
+  useEffect(() => {
+    if (orbAccentRef.current) {
+      gsap.to(orbAccentRef.current, {
+        y: 30,
+        repeat: -1,
+        yoyo: true,
+        duration: 3.2,
+        ease: 'sine.inOut',
+      });
+    }
+  }, []);
+
+  // Enhanced GSAP animation for How It Works section
+  useEffect(() => {
+    if (typeof window !== 'undefined' && document.querySelectorAll('.how-step-card').length) {
+      // Cards: pop, fade, slide up, stagger
+      gsap.set('.how-step-card', { opacity: 0, y: 80, scale: 0.92 });
+      gsap.to('.how-step-card', {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.1,
+        stagger: 0.22,
+        ease: 'back.out(1.7)',
+        scrollTrigger: {
+          trigger: '#how-it-works',
+          start: 'top 80%',
+          end: 'bottom 60%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+      // Step numbers: count up, scale bounce
+      document.querySelectorAll('.how-step-card .step-number').forEach((el, idx) => {
+        gsap.fromTo(el, { scale: 0.7, opacity: 0 }, {
+          scale: 1.18,
+          opacity: 1,
+          duration: 0.7,
+          delay: 0.18 + idx * 0.22,
+          ease: 'back.out(2)',
+          onComplete: () => {
+            // Count up effect
+            const end = Number(el.textContent);
+            gsap.to({ val: 0 }, {
+              val: end,
+              duration: 0.7,
+              ease: 'power1.out',
+              onUpdate: function () {
+                el.textContent = Math.floor(this.targets()[0].val);
+              },
+              onComplete: function () {
+                el.textContent = end;
+              }
+            });
+          },
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+        // Subtle bounce back to 1
+        gsap.to(el, {
+          scale: 1,
+          duration: 0.3,
+          delay: 0.9 + idx * 0.22,
+          ease: 'elastic.out(1,0.5)',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 90%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+      });
+      // Arrows: draw line, then fade in arrowhead
+      document.querySelectorAll('#how-it-works svg path').forEach((el, i) => {
+        gsap.set(el, { strokeDasharray: el.getTotalLength(), strokeDashoffset: el.getTotalLength() });
+        gsap.to(el, {
+          strokeDashoffset: 0,
+          duration: 0.7,
+          delay: 0.5 + i * 0.22,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '#how-it-works',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+      });
+      document.querySelectorAll('#how-it-works svg polygon').forEach((el, i) => {
+        gsap.fromTo(el, { opacity: 0 }, {
+          opacity: 1,
+          duration: 0.3,
+          delay: 1.1 + i * 0.22,
+          ease: 'power1.out',
+          scrollTrigger: {
+            trigger: '#how-it-works',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+      });
+      // Card hover: float, glow
+      document.querySelectorAll('.how-step-card').forEach((el) => {
+        el.addEventListener('mouseenter', () => {
+          gsap.to(el, { y: -10, boxShadow: '0 8px 32px 0 rgba(67,156,176,0.25), 0 1.5px 8px 0 rgba(21,62,66,0.10)', scale: 1.04, duration: 0.35, ease: 'power2.out' });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { y: 0, boxShadow: '', scale: 1, duration: 0.35, ease: 'power2.in' });
+        });
+      });
+    }
+  }, []);
+
   return (
     <div className="font-quicksand antialiased text-[#262626] bg-[#E2E2E2]">
       {/* Modals */}
@@ -945,7 +1096,7 @@ const Home = () => {
             src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
             alt="Luxury Home" 
             className="w-full h-full object-cover opacity-90"/>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#153E42]/60 via-[#153E42]/70 to-[#153E42]/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#153E42]/40 via-[#153E42]/50 to-[#153E42]/50"></div>
           {/* Readability overlay */}
           <div className="absolute inset-0 bg-black/50 mix-blend-multiply"></div>
         </div>
@@ -1094,6 +1245,111 @@ const Home = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trusted by Top Brokerages Marquee */}
+      <section className="relative py-14 bg-gradient-to-br from-[#153E42] via-[#153E42]/95 to-[#439CB0]/80 overflow-hidden border-b border-[#439CB0]/20">
+        {/* Floating glowing orb accent */}
+        <div ref={orbAccentRef} className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-[#439CB0]/40 via-[#439CB0]/20 to-[#153E42]/10 rounded-full blur-3xl opacity-60 pointer-events-none z-0"></div>
+        {/* Subtle overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#153E42]/60 via-transparent to-transparent pointer-events-none z-0"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+          <h3 className="text-center text-2xl md:text-4xl font-dosis font-bold text-white mb-10 tracking-tight relative inline-block mx-auto">
+            Trusted by <span className="text-[#439CB0]">Top Brokerages</span>
+            <span className="block mx-auto mt-2 h-1 w-32 bg-gradient-to-r from-[#439CB0] via-white/60 to-[#439CB0] rounded-full blur-[2px] shadow-lg" style={{marginLeft:'auto',marginRight:'auto'}}></span>
+          </h3>
+        </div>
+        <div ref={marqueeRef} className="relative w-full overflow-x-hidden select-none z-10">
+          <div
+            ref={marqueeInnerRef}
+            className="flex items-center gap-12 py-6"
+            style={{ willChange: 'transform' }}
+          >
+            {/* Duplicate logos for seamless loop */}
+            {[...brokerages, ...brokerages].map((b, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-center min-w-[160px] max-w-[220px] h-24 px-6 bg-white/20 backdrop-blur-lg rounded-2xl border border-white/30 shadow-lg transition-all duration-300 group relative hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60"
+                style={{ boxShadow: '0 4px 24px 0 rgba(67,156,176,0.10)' }}
+              >
+                <img
+                  src={b.logo}
+                  alt={b.name}
+                  className="max-h-16 w-auto max-w-[140px] object-contain transition-transform duration-300 group-hover:scale-110"
+                  style={{ maxHeight: 64, maxWidth: '100%' }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+       {/* How It Works Section */}
+       <section id="how-it-works" className="relative py-24 bg-[#E2E2E2] overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
+              <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">🚀 HOW IT WORKS</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-bold text-[#153E42] mb-4 leading-tight">
+              How <span className="text-[#439CB0]">It Works</span>
+            </h2>
+            <p className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed">
+              Our premium process delivers the highest quality leads, verified and ready for your success.
+            </p>
+          </div>
+          {/* Steps Row */}
+          <div className="relative flex flex-col md:flex-row items-center justify-center gap-8 md:gap-0">
+            {/* Step 1 */}
+            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[220px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+              <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">1</div>
+              <div className="text-xl font-bold text-[#153E42] mb-2">Neighborhood Search</div>
+              <div className="text-[#439CB0] font-medium text-base mb-1">Skip Tracing</div>
+              <div className="text-[#439CB0] font-medium text-base mb-1">Geo Marketing</div>
+            </div>
+            {/* Arrow 1 */}
+            <svg className="hidden md:block w-20 h-10 z-20" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20 Q40 0 70 20" stroke="#439CB0" strokeWidth="3" fill="none" strokeLinecap="round"/>
+              <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
+            </svg>
+            {/* Step 2 */}
+            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+              <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">2</div>
+              <div className="text-xl font-bold text-[#153E42] mb-2">Cold Caller</div>
+            </div>
+            {/* Arrow 2 */}
+            <svg className="hidden md:block w-20 h-10 z-20" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20 Q40 40 70 20" stroke="#439CB0" strokeWidth="3" fill="none" strokeLinecap="round"/>
+              <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
+            </svg>
+            {/* Step 3 */}
+            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+              <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">3</div>
+              <div className="text-xl font-bold text-[#153E42] mb-2">Lead Verifies</div>
+            </div>
+            {/* Arrow 3 (down for mobile, right for desktop) */}
+            <svg className="hidden md:block w-20 h-10 z-20" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20 Q40 0 70 20" stroke="#439CB0" strokeWidth="3" fill="none" strokeLinecap="round"/>
+              <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
+            </svg>
+            {/* Step 4 */}
+            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+              <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">4</div>
+              <div className="text-xl font-bold text-[#153E42] mb-2">QA</div>
+            </div>
+            {/* Arrow 4 */}
+            <svg className="hidden md:block w-20 h-10 z-20" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20 Q40 40 70 20" stroke="#439CB0" strokeWidth="3" fill="none" strokeLinecap="round"/>
+              <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
+            </svg>
+            {/* Step 5 */}
+            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+              <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">5</div>
+              <div className="text-xl font-bold text-[#153E42] mb-2">Agent</div>
             </div>
           </div>
         </div>
@@ -1318,6 +1574,8 @@ const Home = () => {
         </div>
         </div>
       </section>
+
+     
 
 
             

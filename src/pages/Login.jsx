@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion as MOTION } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -114,16 +116,86 @@ const AuthPage = () => {
     }
   ];
 
+  const heroHeadlineRef = useRef(null);
+  const heroSubRef = useRef(null);
+  const leftImageRef = useRef(null);
+  const rightFormRef = useRef(null);
+
+  useEffect(() => {
+    // Animate login hero headline words
+    if (heroHeadlineRef.current) {
+      const words = heroHeadlineRef.current.querySelectorAll('.login-hero-headline-word');
+      gsap.set(words, { opacity: 0, y: 60, scale: 0.95, filter: 'blur(10px)', rotate: 8, clipPath: 'inset(0 0 100% 0)' });
+      gsap.to(words, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        rotate: 0,
+        clipPath: 'inset(0 0 0% 0)',
+        duration: 0.7,
+        stagger: 0.13,
+        ease: 'power4.out',
+        delay: 0.2,
+      });
+    }
+    if (heroSubRef.current) {
+      const words = heroSubRef.current.querySelectorAll('.login-hero-subtext-word');
+      gsap.set(words, { opacity: 0, y: 40, scale: 0.97, filter: 'blur(8px)', rotate: -6, clipPath: 'inset(0 0 100% 0)' });
+      gsap.to(words, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        rotate: 0,
+        clipPath: 'inset(0 0 0% 0)',
+        duration: 0.5,
+        stagger: 0.09,
+        ease: 'power3.out',
+        delay: 0.8,
+      });
+    }
+    // Animate left image and right form
+    if (leftImageRef.current) {
+      gsap.fromTo(leftImageRef.current, { opacity: 0, x: -60, scale: 0.96, filter: 'blur(8px)' }, {
+        opacity: 1, x: 0, scale: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power4.out', delay: 0.1
+      });
+    }
+    if (rightFormRef.current) {
+      gsap.fromTo(rightFormRef.current, { opacity: 0, x: 60, scale: 0.96, filter: 'blur(8px)' }, {
+        opacity: 1, x: 0, scale: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power4.out', delay: 0.2
+      });
+    }
+  }, []);
+
+  const handleSocialBtnHover = (ref) => {
+    if (ref) {
+      gsap.to(ref, {
+        scale: 1.08,
+        boxShadow: '0 0 24px 4px #439CB0, 0 4px 16px 0 rgba(67,156,176,0.18)',
+        filter: 'brightness(1.08) saturate(1.2)',
+        duration: 0.32,
+        ease: 'power2.out',
+      });
+    }
+  };
+  const handleSocialBtnLeave = (ref) => {
+    if (ref) {
+      gsap.to(ref, {
+        scale: 1,
+        boxShadow: '',
+        filter: 'brightness(1) saturate(1)',
+        duration: 0.32,
+        ease: 'power2.in',
+      });
+    }
+  };
+
   return (
-    <div className="font-quicksand min-h-screen flex items-center justify-center bg-[#E2E2E2] p-4">
-      <MOTION.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-6xl bg-white rounded-xl shadow-xl overflow-hidden flex flex-col lg:flex-row"
-      >
+    <div className="font-quicksand mt-10 min-h-screen flex items-center justify-center bg-[#E2E2E2] p-4">
+      <div className="w-full max-w-6xl bg-white rounded-xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
         {/* Left Side - Image */}
-        <div className="lg:w-1/2 relative h-64 lg:h-auto">
+        <div ref={leftImageRef} className="lg:w-1/2 relative h-64 lg:h-auto">
           <div className="absolute inset-0 bg-gradient-to-br from-[#153E42]/80 to-[#439CB0]/50"></div>
           <img 
             src="https://plus.unsplash.com/premium_photo-1674676471104-3c4017645e6f?q=80&w=670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
@@ -131,11 +203,18 @@ const AuthPage = () => {
             className="w-full h-full object-cover"
           />
           <div className="absolute bottom-8 left-8 right-8 text-white">
-            <h2 className="text-2xl md:text-3xl font-dosis font-bold mb-2">Welcome to VistaEstate</h2>
-            <p className="text-sm md:text-base opacity-90">
-              {isLogin 
-                ? "Your gateway to premium properties worldwide"
-                : "Begin your journey to finding the perfect home"}
+            <h2 ref={heroHeadlineRef} className="text-2xl md:text-3xl font-dosis font-bold mb-2">
+              {['Welcome', 'to', 'VistaEstate'].map((word, i) => (
+                <span key={i} className="login-hero-headline-word inline-block mr-2">{word}</span>
+              ))}
+            </h2>
+            <p ref={heroSubRef} className="text-sm md:text-base opacity-90">
+              {(isLogin
+                ? ["Your", "gateway", "to", "premium", "properties", "worldwide"]
+                : ["Begin", "your", "journey", "to", "finding", "the", "perfect", "home"]
+              ).map((word, i) => (
+                <span key={i} className="login-hero-subtext-word inline-block mr-1">{word}</span>
+              ))}
             </p>
             <div className="flex mt-4 space-x-2">
               {[...Array(3)].map((_, i) => (
@@ -146,7 +225,7 @@ const AuthPage = () => {
         </div>
 
         {/* Right Side - Form */}
-        <div className="lg:w-1/2 p-8 md:p-12 flex items-center justify-center">
+        <div ref={rightFormRef} className="lg:w-1/2 p-8 md:p-12 flex items-center justify-center">
           <div className="w-full max-w-md">
             {/* Logo */}
             <div className="text-center mb-8">
@@ -173,28 +252,20 @@ const AuthPage = () => {
 
             {/* Form Error */}
             {errors.form && (
-              <MOTION.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 bg-red-50 rounded-lg border border-red-100"
-              >
+              <div className="mb-6 p-4 bg-red-50 rounded-lg border border-red-100 animate-fadein">
                 <div className="flex items-center text-red-600">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <span className="text-sm">{errors.form}</span>
                 </div>
-              </MOTION.div>
+              </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {!isLogin && (
                 <>
-                  <MOTION.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
+                  <div>
                     <label htmlFor="name" className="block text-sm font-medium text-[#262626] mb-1">
                       Full Name *
                     </label>
@@ -208,13 +279,9 @@ const AuthPage = () => {
                       placeholder="John Doe"
                     />
                     {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-                  </MOTION.div>
+                  </div>
 
-                  <MOTION.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.15 }}
-                  >
+                  <div>
                     <label htmlFor="role" className="block text-sm font-medium text-[#262626] mb-1">
                       Role *
                     </label>
@@ -233,15 +300,11 @@ const AuthPage = () => {
                       ))}
                     </select>
                     {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role}</p>}
-                  </MOTION.div>
+                  </div>
                 </>
               )}
 
-              <MOTION.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
+              <div>
                 <label htmlFor="email" className="block text-sm font-medium text-[#262626] mb-1">
                   Email Address *
                 </label>
@@ -255,13 +318,9 @@ const AuthPage = () => {
                   placeholder="your@email.com"
                 />
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-              </MOTION.div>
+              </div>
 
-              <MOTION.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-              >
+              <div>
                 <label htmlFor="password" className="block text-sm font-medium text-[#262626] mb-1">
                   Password *
                 </label>
@@ -275,14 +334,10 @@ const AuthPage = () => {
                   placeholder="••••••••"
                 />
                 {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-              </MOTION.div>
+              </div>
 
               {!isLogin && (
-                <MOTION.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
+                <div>
                   <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#262626] mb-1">
                     Confirm Password *
                   </label>
@@ -296,7 +351,7 @@ const AuthPage = () => {
                     placeholder="••••••••"
                   />
                   {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
-                </MOTION.div>
+                </div>
               )}
 
               <div className="flex items-center justify-between">
@@ -323,12 +378,12 @@ const AuthPage = () => {
                 )}
               </div>
 
-              <MOTION.button
+              <button
                 type="submit"
                 disabled={isLoading}
-                whileHover={{ scale: isLoading ? 1 : 1.02 }}
-                whileTap={{ scale: isLoading ? 1 : 0.98 }}
                 className={`w-full py-3 px-4 bg-[#439CB0] hover:bg-[#153E42] text-white font-medium rounded-lg transition duration-300 flex items-center justify-center ${isLoading ? 'opacity-80 cursor-not-allowed' : 'shadow-md hover:shadow-lg'}`}
+                onMouseEnter={e => handleSocialBtnHover(e.currentTarget)}
+                onMouseLeave={e => handleSocialBtnLeave(e.currentTarget)}
               >
                 {isLoading ? (
                   <>
@@ -341,7 +396,7 @@ const AuthPage = () => {
                 ) : (
                   isLogin ? 'Sign In' : 'Create Account'
                 )}
-              </MOTION.button>
+              </button>
             </form>
 
             <div className="mt-8 pt-6 border-t border-[#262626]/20">
@@ -350,15 +405,14 @@ const AuthPage = () => {
               </p>
               <div className="flex justify-center space-x-3">
                 {socialMedia.map((social) => (
-                  <MOTION.button 
+                  <button
                     key={social.name}
-                    whileHover={{ y: -3 }}
                     className={`p-3 rounded-lg transition-all duration-300 border border-[#262626]/20 hover:border-transparent ${activeSocial === social.name ? `${social.color} bg-[#262626]/10` : 'bg-white text-[#262626] hover:bg-[#262626]/5'}`}
-                    onMouseEnter={() => setActiveSocial(social.name)}
-                    onMouseLeave={() => setActiveSocial(null)}
+                    onMouseEnter={e => { setActiveSocial(social.name); handleSocialBtnHover(e.currentTarget); }}
+                    onMouseLeave={e => { setActiveSocial(null); handleSocialBtnLeave(e.currentTarget); }}
                   >
                     {social.icon}
-                  </MOTION.button>
+                  </button>
                 ))}
               </div>
             </div>
@@ -388,7 +442,7 @@ const AuthPage = () => {
             </div>
           </div>
         </div>
-      </MOTION.div>
+      </div>
     </div>
   );
 };
