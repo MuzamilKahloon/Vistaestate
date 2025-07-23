@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion as MOTION, useAnimation, useInView } from 'framer-motion';
-import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 
 const AboutUs = () => {
   // State for modal
@@ -17,27 +18,6 @@ const AboutUs = () => {
     challenge: '',
     consultationTime: ''
   });
-
-  // Animation refs and controls
-  const heroRef = useRef(null);
-  const storyRef = useRef(null);
-  const valuesRef = useRef(null);
-  const teamRef = useRef(null);
-  const awardsRef = useRef(null);
-  
-  const heroInView = useInView(heroRef, { once: true, amount: 0.5 });
-  const storyInView = useInView(storyRef, { once: true, amount: 0.2 });
-  const valuesInView = useInView(valuesRef, { once: true, amount: 0.2 });
-  const teamInView = useInView(teamRef, { once: true, amount: 0.2 });
-  const awardsInView = useInView(awardsRef, { once: true, amount: 0.2 });
-
-  const controls = useAnimation();
-
-  useEffect(() => {
-    if (heroInView) {
-      controls.start("visible");
-    }
-  }, [heroInView, controls]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -65,357 +45,6 @@ const AboutUs = () => {
       consultationTime: ''
     });
   };
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.6, -0.05, 0.01, 0.99]
-      }
-    }
-  };
-
-  const buttonHover = {
-    rest: { 
-      backgroundColor: "#439CB0",
-      transition: { duration: 0.3 }
-    },
-    hover: { 
-      backgroundColor: "#153E42",
-      transition: { duration: 0.3 }
-    }
-  };
-
-  const secondaryButtonHover = {
-    rest: { 
-      backgroundColor: "#153E42",
-      transition: { duration: 0.3 }
-    },
-    hover: { 
-      backgroundColor: "#262626",
-      transition: { duration: 0.3 }
-    }
-  };
-
-  // Booking Modal Component
-  const BookingModal = () => (
-    <MOTION.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm"
-    >
-      <MOTION.div 
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-      >
-        <div className="p-6">
-          {/* Modal Header */}
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-[#262626]">Book Your Real Estate Lead Gen Consultation</h2>
-              <p className="text-[#262626]/80">Unlock Uncapped, Approval-Based Lead Delivery With 25%+ Avg. Conversions</p>
-            </div>
-            <MOTION.button 
-              onClick={() => setIsBookingModalOpen(false)}
-              whileHover={{ scale: 1.1 }}
-              className="text-[#262626]/60 hover:text-[#262626]"
-              aria-label="Close modal"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </MOTION.button>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <MOTION.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Full Name (Required)</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </MOTION.div>
-              <MOTION.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Email Address (Required)</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </MOTION.div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <MOTION.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Phone Number (Required)</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </MOTION.div>
-              <MOTION.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Brokerage / Company Name</label>
-                <input
-                  type="text"
-                  name="brokerage"
-                  value={formData.brokerage}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </MOTION.div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <MOTION.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Are you a solo agent or team?</label>
-                <select
-                  name="agentType"
-                  value={formData.agentType}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                >
-                  <option value="">Select</option>
-                  <option value="solo">Solo Agent</option>
-                  <option value="team">Team</option>
-                  <option value="broker">Broker Owner</option>
-                </select>
-              </MOTION.div>
-              <MOTION.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Which markets do you serve?</label>
-                <input
-                  type="text"
-                  name="markets"
-                  value={formData.markets}
-                  onChange={handleInputChange}
-                  placeholder="Enter your markets"
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </MOTION.div>
-            </div>
-
-            <MOTION.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-[#262626] mb-1">What's your biggest lead generation challenge right now?</label>
-              <textarea
-                name="challenge"
-                value={formData.challenge}
-                onChange={handleInputChange}
-                rows={3}
-                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-              ></textarea>
-            </MOTION.div>
-
-            <MOTION.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-[#262626] mb-1">Preferred Consultation Time</label>
-              <input
-                type="datetime-local"
-                name="consultationTime"
-                value={formData.consultationTime}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-              />
-            </MOTION.div>
-
-            <MOTION.div 
-              variants={itemVariants}
-              className="pt-4"
-            >
-              <MOTION.button
-                type="submit"
-                initial="rest"
-                whileHover="hover"
-                animate="rest"
-                variants={buttonHover}
-                className="w-full text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-              >
-                🔒 Schedule My Call Now
-              </MOTION.button>
-            </MOTION.div>
-          </form>
-
-          {/* Conversion Messaging */}
-          <MOTION.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4"
-          >
-            <MOTION.div 
-              variants={itemVariants}
-              className="bg-[#153E42]/10 p-4 rounded-lg"
-            >
-              <h3 className="font-bold text-[#153E42] mb-2">What to expect:</h3>
-              <ul className="space-y-2 text-sm text-[#153E42]">
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>15-minute strategy session</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Custom lead generation plan</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>No obligation consultation</span>
-                </li>
-              </ul>
-            </MOTION.div>
-            
-            <MOTION.div 
-              variants={itemVariants}
-              className="bg-[#439CB0]/10 p-4 rounded-lg"
-            >
-              <h3 className="font-bold text-[#439CB0] mb-2">Our Guarantees:</h3>
-              <ul className="space-y-2 text-sm text-[#439CB0]">
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#439CB0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>25%+ average conversion rate</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#439CB0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Exclusive, intent-based leads</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#439CB0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Money-back guarantee</span>
-                </li>
-              </ul>
-            </MOTION.div>
-          </MOTION.div>
-        </div>
-      </MOTION.div>
-    </MOTION.div>
-  );
-
-  // Thank You Modal Component
-  const ThankYouModal = () => (
-    <MOTION.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm"
-    >
-      <MOTION.div 
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-md w-full p-8 text-center"
-      >
-        <MOTION.div 
-          animate={{ 
-            rotate: [0, 10, -10, 0],
-            scale: [1, 1.1, 1.1, 1]
-          }}
-          transition={{ duration: 0.6 }}
-          className="mb-6"
-        >
-          <svg className="w-16 h-16 mx-auto text-[#439CB0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-        </MOTION.div>
-        
-        <MOTION.h2 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-2xl font-bold text-[#262626] mb-4"
-        >
-          Thank You for Booking!
-        </MOTION.h2>
-        
-        <MOTION.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-4 text-[#262626]/80 mb-6"
-        >
-          <p>Your consultation has been scheduled successfully.</p>
-          
-          <div className="bg-[#153E42]/10 p-4 rounded-lg text-left">
-            <h3 className="font-semibold text-[#153E42] mb-2">What to expect next:</h3>
-            <ul className="space-y-2 text-sm text-[#153E42]">
-              <li className="flex items-start">
-                <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span>You'll receive a confirmation email with calendar invite</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span>Our team will reach out to confirm details</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span>Prepare any questions about your lead generation needs</span>
-              </li>
-            </ul>
-          </div>
-          
-          <div className="mt-4 bg-[#262626]/10 p-4 rounded-lg">
-            <p className="text-sm text-[#262626]/60">We'll send you a Zoom link 24 hours before your scheduled call.</p>
-          </div>
-        </MOTION.div>
-        
-        <MOTION.button
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsThankYouModalOpen(false)}
-          className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300"
-        >
-          Close
-        </MOTION.button>
-      </MOTION.div>
-    </MOTION.div>
-  );
 
   // Team members data
   const teamMembers = [
@@ -499,6 +128,673 @@ const AboutUs = () => {
     }
   ];
 
+  // Refs for GSAP animations
+  const heroSectionRef = useRef(null);
+  const storySectionRef = useRef(null);
+  const storyStatRefs = useRef([]);
+  const valuesSectionRef = useRef(null);
+  const valueCardRefs = useRef([]);
+  const teamSectionRef = useRef(null);
+  const teamCardRefs = useRef([]);
+  const teamImgRefs = useRef([]);
+  const awardsSectionRef = useRef(null);
+  const awardCardRefs = useRef([]);
+  const awardIconRefs = useRef([]);
+  const ctaSectionRef = useRef(null);
+  // Add refs for hero headline, subheadline, CTA buttons, and floating orb
+  const heroHeadlineRef = useRef(null);
+  const heroSubRef = useRef(null);
+  const heroCtaRef = useRef(null);
+  const heroOrbRef = useRef(null);
+  // Add refs for story section elements
+  const storyTitleRef = useRef(null);
+  const storySubtitleRef = useRef(null);
+  const storyImgRef = useRef(null);
+  const storyStatsGridRef = useRef(null);
+  // Add refs for values and awards section elements
+  const valuesTitleRef = useRef(null);
+  const valuesSubtitleRef = useRef(null);
+  const awardsTitleRef = useRef(null);
+  const awardsSubtitleRef = useRef(null);
+  // Add refs for hero headline words, subheadline, CTA buttons, orb, and parallax container
+  const heroCtaBtnRefs = useRef([]);
+  const heroParallaxRef = useRef(null);
+  // Add refs for story section title words, subtitle, image, stats cards, and background
+  const storyTitleWordsRef = useRef([]);
+  const storyStatsCardRefs = useRef([]);
+  const storyBgParticlesRef = useRef(null);
+
+  // For hero section: split headline into two lines, animate each word/letter
+  const heroLine1WordsRef = useRef([]);
+  const heroLine2WordsRef = useRef([]);
+
+  // Set refs for stats
+  const addToStatRefs = (el) => {
+    if (el && !storyStatRefs.current.includes(el)) {
+      storyStatRefs.current.push(el);
+    }
+  };
+
+  // Set refs for value cards
+  const addToValueCardRefs = (el) => {
+    if (el && !valueCardRefs.current.includes(el)) {
+      valueCardRefs.current.push(el);
+    }
+  };
+
+  // Set refs for team cards
+  const addToTeamCardRefs = (el) => {
+    if (el && !teamCardRefs.current.includes(el)) {
+      teamCardRefs.current.push(el);
+    }
+  };
+
+  // Set refs for team images
+  const addToTeamImgRefs = (el) => {
+    if (el && !teamImgRefs.current.includes(el)) {
+      teamImgRefs.current.push(el);
+    }
+  };
+
+  // Set refs for award cards
+  const addToAwardCardRefs = (el) => {
+    if (el && !awardCardRefs.current.includes(el)) {
+      awardCardRefs.current.push(el);
+    }
+  };
+
+  // Set refs for award icons
+  const addToAwardIconRefs = (el) => {
+    if (el && !awardIconRefs.current.includes(el)) {
+      awardIconRefs.current.push(el);
+    }
+  };
+
+  // Hover animations for team cards
+  const handleTeamCardHover = (index, isHovering) => {
+    const card = teamCardRefs.current[index];
+    const img = teamImgRefs.current[index];
+    
+    if (card && img) {
+      if (isHovering) {
+        gsap.to(card, { scale: 1.05, duration: 0.3 });
+        gsap.to(img, { rotate: 5, duration: 0.3 });
+      } else {
+        gsap.to(card, { scale: 1, duration: 0.3 });
+        gsap.to(img, { rotate: 0, duration: 0.3 });
+      }
+    }
+  };
+
+  // Hover animations for award cards
+  const handleAwardCardHover = (index, isHovering) => {
+    const card = awardCardRefs.current[index];
+    const icon = awardIconRefs.current[index];
+    
+    if (card && icon) {
+      if (isHovering) {
+        gsap.to(card, { scale: 1.05, duration: 0.3 });
+        gsap.to(icon, { rotate: 10, duration: 0.3 });
+      } else {
+        gsap.to(card, { scale: 1, duration: 0.3 });
+        gsap.to(icon, { rotate: 0, duration: 0.3 });
+      }
+    }
+  };
+
+  // GSAP animations on component mount
+  useEffect(() => {
+    // HERO SECTION MAGIC (updated)
+    if (heroParallaxRef.current) {
+      // Floating, morphing orb
+      if (heroOrbRef.current) {
+        gsap.to(heroOrbRef.current, {
+          y: 40,
+          scale: 1.08,
+          borderRadius: '60% 40% 50% 70% / 60% 30% 70% 40%',
+          repeat: -1,
+          yoyo: true,
+          duration: 4,
+          ease: 'sine.inOut',
+        });
+      }
+      // Parallax effect
+      gsap.to(heroOrbRef.current, {
+        yPercent: 10,
+        scrollTrigger: {
+          trigger: heroParallaxRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5,
+        },
+      });
+      // Headline line 1: 'Our Story' word-by-word pop-in
+      gsap.set(heroLine1WordsRef.current, { opacity: 0, y: 60, scale: 0.7, rotate: -10, filter: 'blur(8px)' });
+      gsap.to(heroLine1WordsRef.current, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotate: 0,
+        filter: 'blur(0px)',
+        duration: 0.7,
+        stagger: 0.13,
+        ease: 'elastic.out(1, 0.7)',
+        delay: 0.2,
+      });
+      // Headline line 2: 'On Success' word-by-word pop-in, with color pop
+      gsap.set(heroLine2WordsRef.current, { opacity: 0, y: 60, scale: 0.7, rotate: 10, filter: 'blur(8px)' });
+      gsap.to(heroLine2WordsRef.current, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotate: 0,
+        filter: 'blur(0px)',
+        color: '#439CB0',
+        duration: 0.7,
+        stagger: 0.13,
+        ease: 'elastic.out(1, 0.7)',
+        delay: 0.6,
+      });
+      // Subheadline left-to-right reveal and glow
+      gsap.fromTo(heroSubRef.current, { opacity: 0, x: -40, filter: 'blur(8px)', textShadow: '0 0 0 #439CB0' }, { opacity: 1, x: 0, filter: 'blur(0px)', textShadow: '0 0 16px #439CB0', duration: 0.8, delay: 1.1, ease: 'power3.out' });
+      // CTA buttons bounce in and pulse
+      gsap.set(heroCtaBtnRefs.current, { opacity: 0, y: 40, scale: 0.9 });
+      gsap.to(heroCtaBtnRefs.current, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.7,
+        stagger: 0.15,
+        delay: 1.5,
+        ease: 'back.out(1.7)',
+      });
+    }
+
+    // STORY SECTION MAGIC
+    if (storySectionRef.current) {
+      // Animated background particles
+      if (storyBgParticlesRef.current) {
+        gsap.to(storyBgParticlesRef.current, {
+          backgroundPosition: '200% 0',
+          repeat: -1,
+          duration: 10,
+          ease: 'linear',
+        });
+      }
+      // Title word-by-word 3D flip/unfold
+      gsap.set(storyTitleWordsRef.current, { opacity: 0, rotateX: 90, y: 40 });
+      gsap.to(storyTitleWordsRef.current, {
+        opacity: 1,
+        rotateX: 0,
+        y: 0,
+        duration: 0.7,
+        stagger: 0.11,
+        ease: 'back.out(1.7)',
+        scrollTrigger: { trigger: storySectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' },
+      });
+      // Subtitle left-to-right color sweep
+      gsap.fromTo(storySubtitleRef.current, { opacity: 0, x: -40, filter: 'blur(8px)' }, { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.7, delay: 0.3, ease: 'power3.out', scrollTrigger: { trigger: storySectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } });
+      // Image 3D flip/unveil and float
+      gsap.fromTo(storyImgRef.current, { opacity: 0, x: -60, rotateY: 32, filter: 'blur(8px)' }, { opacity: 1, x: 0, rotateY: 0, filter: 'blur(0px)', duration: 1, delay: 0.5, ease: 'power4.out', scrollTrigger: { trigger: storySectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } });
+      gsap.to(storyImgRef.current, { y: 18, repeat: -1, yoyo: true, duration: 2.5, ease: 'sine.inOut' });
+      // Stats grid cards pop in with springy, staggered effects
+      storyStatsCardRefs.current.forEach((card, index) => {
+        gsap.fromTo(card, { opacity: 0, y: 60, scale: 0.92, filter: 'blur(8px)', rotateY: 16 }, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', rotateY: 0, duration: 1, delay: 0.7 + index * 0.13, ease: 'elastic.out(1, 0.6)', scrollTrigger: { trigger: storySectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } });
+      });
+    }
+
+    // Values Section Animations
+    if (valuesSectionRef.current) {
+      gsap.fromTo(
+        valuesTitleRef.current,
+        { opacity: 0, y: 40, scale: 0.95, filter: 'blur(8px)' },
+        { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, ease: 'power4.out', scrollTrigger: { trigger: valuesSectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } }
+      );
+      gsap.fromTo(
+        valuesSubtitleRef.current,
+        { opacity: 0, y: 30, scale: 0.97, filter: 'blur(8px)' },
+        { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: valuesSectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } }
+      );
+      valueCardRefs.current.forEach((card, index) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 60, scale: 0.92, filter: 'blur(8px)', rotateY: 16 },
+          { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', rotateY: 0, duration: 1, delay: index * 0.15, ease: 'power4.out', scrollTrigger: { trigger: valuesSectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } }
+        );
+      });
+    }
+
+    // Team Section
+    if (teamSectionRef.current) {
+      teamCardRefs.current.forEach((card, index) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 80, scale: 0.85, rotate: -8, filter: 'blur(8px)' },
+          { 
+            opacity: 1, 
+            y: 0, 
+            scale: 1, 
+            rotate: 0, 
+            filter: 'blur(0px)', 
+            duration: 1.1, 
+            delay: index * 0.18,
+            ease: 'power4.out', 
+            scrollTrigger: { 
+              trigger: teamSectionRef.current, 
+              start: 'top 80%', 
+              end: 'bottom 60%', 
+              toggleActions: 'play none none reverse' 
+            } 
+          }
+        );
+      });
+    }
+
+    // Awards Section Animations
+    if (awardsSectionRef.current) {
+      gsap.fromTo(
+        awardsTitleRef.current,
+        { opacity: 0, y: 40, scale: 0.95, filter: 'blur(8px)' },
+        { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, ease: 'power4.out', scrollTrigger: { trigger: awardsSectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } }
+      );
+      gsap.fromTo(
+        awardsSubtitleRef.current,
+        { opacity: 0, y: 30, scale: 0.97, filter: 'blur(8px)' },
+        { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: awardsSectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } }
+      );
+      awardCardRefs.current.forEach((card, index) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 60, scale: 0.92, filter: 'blur(8px)', rotateY: 16 },
+          { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', rotateY: 0, duration: 1, delay: index * 0.15, ease: 'power4.out', scrollTrigger: { trigger: awardsSectionRef.current, start: 'top 80%', end: 'bottom 60%', toggleActions: 'play none none reverse' } }
+        );
+      });
+    }
+
+    // CTA Section
+    if (ctaSectionRef.current) {
+      gsap.fromTo(
+        ctaSectionRef.current,
+        { opacity: 0, y: 40 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 1, 
+          ease: 'power4.out', 
+          scrollTrigger: { 
+            trigger: ctaSectionRef.current, 
+            start: 'top 80%', 
+            end: 'bottom 60%', 
+            toggleActions: 'play none none reverse' 
+          } 
+        }
+      );
+    }
+
+    // For each section, use class selectors and gsap.set/gsap.to as in Home.jsx
+    gsap.set('.about-hero-headline-word', { opacity: 0, y: 30, scale: 0.95 });
+    gsap.to('.about-hero-headline-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      stagger: 0.13,
+      ease: 'power3.out',
+      delay: 0.2,
+    });
+    gsap.set('.about-hero-subtext-word', { opacity: 0, y: 20, scale: 0.95 });
+    gsap.to('.about-hero-subtext-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      stagger: 0.08,
+      ease: 'power2.out',
+      delay: 1.2,
+    });
+    // STORY SECTION
+    gsap.set('.about-story-headline-word', { opacity: 0, y: 30, scale: 0.95 });
+    gsap.to('.about-story-headline-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      stagger: 0.13,
+      ease: 'power3.out',
+      delay: 0.2,
+      scrollTrigger: {
+        trigger: '.about-story-section',
+        start: 'top 80%',
+        end: 'bottom 60%',
+        toggleActions: 'play none none reverse',
+      },
+    });
+    gsap.set('.about-story-subtext-word', { opacity: 0, y: 20, scale: 0.95 });
+    gsap.to('.about-story-subtext-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      stagger: 0.08,
+      ease: 'power2.out',
+      delay: 1.2,
+      scrollTrigger: {
+        trigger: '.about-story-section',
+        start: 'top 80%',
+        end: 'bottom 60%',
+        toggleActions: 'play none none reverse',
+      },
+    });
+    // VALUES SECTION
+    gsap.set('.about-values-headline-word', { opacity: 0, y: 30, scale: 0.95 });
+    gsap.to('.about-values-headline-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      stagger: 0.13,
+      ease: 'power3.out',
+      delay: 0.2,
+      scrollTrigger: {
+        trigger: '.about-values-section',
+        start: 'top 80%',
+        end: 'bottom 60%',
+        toggleActions: 'play none none reverse',
+      },
+    });
+    // AWARDS SECTION
+    gsap.set('.about-awards-headline-word', { opacity: 0, y: 30, scale: 0.95 });
+    gsap.to('.about-awards-headline-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      stagger: 0.13,
+      ease: 'power3.out',
+      delay: 0.2,
+      scrollTrigger: {
+        trigger: '.about-awards-section',
+        start: 'top 80%',
+        end: 'bottom 60%',
+        toggleActions: 'play none none reverse',
+      },
+    });
+    // CARDS/GRIDS/IMAGES (generic)
+    gsap.set('.about-animate-card', { opacity: 0, y: 40, scale: 0.92, filter: 'blur(8px)' });
+    gsap.to('.about-animate-card', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: 'blur(0px)',
+      duration: 0.7,
+      stagger: 0.13,
+      ease: 'power3.out',
+      delay: 0.4,
+      scrollTrigger: {
+        trigger: '.about-animate-card-trigger',
+        start: 'top 80%',
+        end: 'bottom 60%',
+        toggleActions: 'play none none reverse',
+      },
+    });
+
+    // Cleanup function
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
+  // Booking Modal Component
+  const BookingModal = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
+      <div className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          {/* Modal Header */}
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-[#262626]">Book Your Real Estate Lead Gen Consultation</h2>
+              <p className="text-[#262626]/80">Unlock Uncapped, Approval-Based Lead Delivery With 25%+ Avg. Conversions</p>
+            </div>
+            <button 
+              onClick={() => setIsBookingModalOpen(false)}
+              className="text-[#262626]/60 hover:text-[#262626]"
+              aria-label="Close modal"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#262626] mb-1">Full Name (Required)</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#262626] mb-1">Email Address (Required)</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#262626] mb-1">Phone Number (Required)</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#262626] mb-1">Brokerage / Company Name</label>
+                <input
+                  type="text"
+                  name="brokerage"
+                  value={formData.brokerage}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#262626] mb-1">Are you a solo agent or team?</label>
+                <select
+                  name="agentType"
+                  value={formData.agentType}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+                >
+                  <option value="">Select</option>
+                  <option value="solo">Solo Agent</option>
+                  <option value="team">Team</option>
+                  <option value="broker">Broker Owner</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#262626] mb-1">Which markets do you serve?</label>
+                <input
+                  type="text"
+                  name="markets"
+                  value={formData.markets}
+                  onChange={handleInputChange}
+                  placeholder="Enter your markets"
+                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#262626] mb-1">What's your biggest lead generation challenge right now?</label>
+              <textarea
+                name="challenge"
+                value={formData.challenge}
+                onChange={handleInputChange}
+                rows={3}
+                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+              ></textarea>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#262626] mb-1">Preferred Consultation Time</label>
+              <input
+                type="datetime-local"
+                name="consultationTime"
+                value={formData.consultationTime}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
+              />
+            </div>
+
+            <div className="pt-4">
+              <button
+                type="submit"
+                className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                🔒 Schedule My Call Now
+              </button>
+            </div>
+          </form>
+
+          {/* Conversion Messaging */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-[#153E42]/10 p-4 rounded-lg">
+              <h3 className="font-bold text-[#153E42] mb-2">What to expect:</h3>
+              <ul className="space-y-2 text-sm text-[#153E42]">
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>15-minute strategy session</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Custom lead generation plan</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>No obligation consultation</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="bg-[#439CB0]/10 p-4 rounded-lg">
+              <h3 className="font-bold text-[#439CB0] mb-2">Our Guarantees:</h3>
+              <ul className="space-y-2 text-sm text-[#439CB0]">
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#439CB0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>25%+ average conversion rate</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#439CB0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Exclusive, intent-based leads</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 mr-2 mt-0.5 text-[#439CB0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Money-back guarantee</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Thank You Modal Component
+  const ThankYouModal = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
+      <div className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-md w-full p-8 text-center">
+        <div className="mb-6">
+          <svg className="w-16 h-16 mx-auto text-[#439CB0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        
+        <h2 className="text-2xl font-bold text-[#262626] mb-4">
+          Thank You for Booking!
+        </h2>
+        
+        <div className="space-y-4 text-[#262626]/80 mb-6">
+          <p>Your consultation has been scheduled successfully.</p>
+          
+          <div className="bg-[#153E42]/10 p-4 rounded-lg text-left">
+            <h3 className="font-semibold text-[#153E42] mb-2">What to expect next:</h3>
+            <ul className="space-y-2 text-sm text-[#153E42]">
+              <li className="flex items-start">
+                <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>You'll receive a confirmation email with calendar invite</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Our team will reach out to confirm details</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-4 h-4 mr-2 mt-0.5 text-[#153E42] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Prepare any questions about your lead generation needs</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="mt-4 bg-[#262626]/10 p-4 rounded-lg">
+            <p className="text-sm text-[#262626]/60">We'll send you a Zoom link 24 hours before your scheduled call.</p>
+          </div>
+        </div>
+        
+        <button
+          onClick={() => setIsThankYouModalOpen(false)}
+          className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+
+  // Utility to split a string into word spans for animation
+  function splitWords(text, className) {
+    return text.split(' ').map((word, i) => (
+      <span key={i} className={className}>{word} </span>
+    ));
+  }
+
   return (
     <div className="font-quicksand antialiased text-[#262626] bg-[#E2E2E2]">
       {/* Modals */}
@@ -507,115 +803,74 @@ const AboutUs = () => {
 
       {/* Hero Section */}
       <section 
-        ref={heroRef}
+        ref={heroSectionRef}
         className="relative min-h-screen flex items-center justify-center bg-[#153E42] overflow-hidden"
       >
         {/* Background Image with Overlay */}
-        <MOTION.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="absolute inset-0"
-        >
+        <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
             alt="About Us" 
             className="w-full h-full object-cover opacity-90"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#153E42]/30 to-[#153E42]/100"></div>
-        </MOTION.div>
+        </div>
         
         {/* Content Container */}
         <div className="relative z-10 w-full max-w-7xl px-6 sm:px-8 mx-auto">
-          <MOTION.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate={heroInView ? "visible" : "hidden"}
-            className="flex flex-col items-center justify-center min-h-[80vh] py-16"
-          >
+          <div className="flex flex-col items-center justify-center min-h-[80vh] py-16">
             {/* Headline */}
-            <MOTION.div 
-              variants={itemVariants}
-              className="text-center mb-12 w-full max-w-4xl px-4"
-            >
-              <MOTION.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center mt-30 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6"
-              >
+            <div className="text-center mb-12 w-full max-w-4xl px-4">
+              <div className="inline-flex items-center mt-30 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
                 <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">🏢 ABOUT US</span>
-              </MOTION.div>
-              <MOTION.h1 
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-white mb-4 leading-tight"
-              >
-                Our <span className="text-[#439CB0]">Story</span> & <span className="text-[#439CB0]">Team</span>
-              </MOTION.h1>
-              <MOTION.p 
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-lg md:text-xl text-white/80 font-light mb-8 leading-relaxed max-w-2xl mx-auto"
-              >
+              </div>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-white mb-4 leading-tight" ref={heroHeadlineRef}>
+                {splitWords('Our Story', 'about-hero-headline-word')}
+              </h1>
+              <p className="text-lg md:text-xl text-white/80 font-light mb-8 leading-relaxed max-w-2xl mx-auto" ref={heroSubRef}>
                 Discover the people and values behind our real estate lead generation success
-              </MOTION.p>
-            </MOTION.div>
+              </p>
+            </div>
 
             {/* CTA Buttons */}
-            <MOTION.div 
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4"
-            >
-              <MOTION.button
-                initial="rest"
-                whileHover="hover"
-                animate="rest"
-                variants={buttonHover}
+            <div className="flex flex-col sm:flex-row gap-4" ref={heroCtaRef}>
+              <button
                 onClick={() => setIsBookingModalOpen(true)}
-                className="px-8 py-4 rounded-lg text-white font-medium shadow-lg"
+                className="px-8 py-4 rounded-lg bg-[#439CB0] hover:bg-[#153E42] text-white font-medium shadow-lg transition-colors duration-300"
               >
                 🚀 Get Started Today
-              </MOTION.button>
-              <MOTION.button
-                initial="rest"
-                whileHover="hover"
-                animate="rest"
-                variants={secondaryButtonHover}
-                className="px-8 py-4 rounded-lg text-white font-medium shadow-lg border border-white/20"
+              </button>
+              <button
+                className="px-8 py-4 rounded-lg bg-[#153E42] hover:bg-[#262626] text-white font-medium shadow-lg border border-white/20 transition-colors duration-300"
               >
                 Learn More
-              </MOTION.button>
-            </MOTION.div>
-          </MOTION.div>
+              </button>
+            </div>
+
+            {/* Floating Orb */}
+            <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-gradient-to-r from-[#439CB0]/30 to-[#153E42]/30 opacity-10 pointer-events-none" ref={heroOrbRef}></div>
+          </div>
         </div>
       </section>
 
       {/* Our Story Section */}
       <section 
-        ref={storyRef}
+        ref={storySectionRef}
         className="py-24 bg-[#E2E2E2]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <MOTION.div 
-            initial="hidden"
-            animate={storyInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="text-center mb-16"
-          >
-            <MOTION.div variants={itemVariants} className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
               <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">📜 OUR JOURNEY</span>
-            </MOTION.div>
-            <MOTION.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight">
-              Building <span className="text-[#439CB0]">Our Company</span>
-            </MOTION.h2>
-            <MOTION.p variants={itemVariants} className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed">
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight" ref={storyTitleRef}>
+              {splitWords('Building Our Company', 'about-story-headline-word')}
+            </h2>
+            <p className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed" ref={storySubtitleRef}>
               From vision to reality - our evolution in real estate lead generation
-            </MOTION.p>
-          </MOTION.div>
+            </p>
+          </div>
           
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="lg:w-1/2">
@@ -624,36 +879,32 @@ const AboutUs = () => {
                   src="https://images.pexels.com/photos/2440471/pexels-photo-2440471.jpeg" 
                   alt="Our Office" 
                   className="w-full h-full object-cover"
+                  ref={storyImgRef}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
               </div>
             </div>
             <div className="lg:w-1/2">
-              <MOTION.p variants={itemVariants} className="text-[#262626] mb-6 leading-relaxed font-light">
+              <p className="text-[#262626] mb-6 leading-relaxed font-light">
                 Founded in 2015, we began as a small team of passionate real estate professionals with a vision to revolutionize lead generation. What started as a local service has evolved into a nationally recognized real estate lead generation provider.
-              </MOTION.p>
-              <MOTION.p variants={itemVariants} className="text-[#262626] mb-8 leading-relaxed font-light">
+              </p>
+              <p className="text-[#262626] mb-8 leading-relaxed font-light">
                 Today, we serve agents across the country, helping individuals and teams generate high-quality leads while assisting brokers in building profitable businesses. Our commitment to transparency, integrity, and exceptional results continues to set us apart in the industry.
-              </MOTION.p>
+              </p>
               
               {/* Stats Grid */}
-              <MOTION.div 
-                variants={containerVariants}
-                initial="hidden"
-                animate={storyInView ? "visible" : "hidden"}
-                className="grid grid-cols-2 gap-4"
-              >
+              <div className="grid grid-cols-2 gap-4" ref={storyStatsGridRef}>
                 {stats.map((stat, index) => (
-                  <MOTION.div 
+                  <div 
                     key={index}
-                    variants={itemVariants}
+                    ref={addToStatRefs}
                     className="bg-[#153E42]/10 hover:bg-[#439CB0]/10 rounded-xl p-6 text-center transition-colors duration-300 group"
                   >
                     <div className="text-3xl font-bold text-[#153E42] mb-2 group-hover:text-[#439CB0]">{stat.value}</div>
                     <div className="text-sm text-[#262626] font-medium">{stat.label}</div>
-                  </MOTION.div>
+                  </div>
                 ))}
-              </MOTION.div>
+              </div>
             </div>
           </div>
         </div>
@@ -661,36 +912,26 @@ const AboutUs = () => {
 
       {/* Our Values Section */}
       <section 
-        ref={valuesRef}
+        ref={valuesSectionRef}
         className="py-24 bg-[#E2E2E2]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <MOTION.div 
-            initial="hidden"
-            animate={valuesInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="text-center mb-16"
-          >
-            <MOTION.div variants={itemVariants} className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
               <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">🌟 OUR VALUES</span>
-            </MOTION.div>
-            <MOTION.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight">
-              What <span className="text-[#439CB0]">Guides Us</span>
-            </MOTION.h2>
-            <MOTION.p variants={itemVariants} className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed">
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight" ref={valuesTitleRef}>
+              {splitWords('What Guides Us', 'about-values-headline-word')}
+            </h2>
+            <p className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed" ref={valuesSubtitleRef}>
               The principles that shape every decision we make
-            </MOTION.p>
-          </MOTION.div>
+            </p>
+          </div>
           
-          <MOTION.div 
-            initial="hidden"
-            animate={valuesInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            <MOTION.div 
-              variants={itemVariants}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div 
+              ref={addToValueCardRefs}
               className="bg-white rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-[#262626]/10 group"
             >
               <div className="w-16 h-16 bg-[#439CB0]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#439CB0]/20 transition-colors duration-300">
@@ -702,10 +943,10 @@ const AboutUs = () => {
               <p className="text-[#262626]/80 text-sm leading-relaxed">
                 We believe in complete transparency and honesty in all our dealings. Your trust is our most valued asset.
               </p>
-            </MOTION.div>
+            </div>
             
-            <MOTION.div 
-              variants={itemVariants}
+            <div 
+              ref={addToValueCardRefs}
               className="bg-white rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-[#262626]/10 group"
             >
               <div className="w-16 h-16 bg-[#439CB0]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#439CB0]/20 transition-colors duration-300">
@@ -717,10 +958,10 @@ const AboutUs = () => {
               <p className="text-[#262626]/80 text-sm leading-relaxed">
                 We constantly seek better ways to serve our clients, leveraging technology and creative solutions.
               </p>
-            </MOTION.div>
+            </div>
             
-            <MOTION.div 
-              variants={itemVariants}
+            <div 
+              ref={addToValueCardRefs}
               className="bg-white rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-[#262626]/10 group"
             >
               <div className="w-16 h-16 bg-[#439CB0]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#439CB0]/20 transition-colors duration-300">
@@ -732,51 +973,44 @@ const AboutUs = () => {
               <p className="text-[#262626]/80 text-sm leading-relaxed">
                 We're committed to building not just leads, but thriving businesses where agents can flourish.
               </p>
-            </MOTION.div>
-          </MOTION.div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Meet Our Team Section */}
       <section 
-        ref={teamRef}
+        ref={teamSectionRef}
         className="py-24 bg-[#E2E2E2]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <MOTION.div 
-            initial="hidden"
-            animate={teamInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="text-center mb-16"
-          >
-            <MOTION.div variants={itemVariants} className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
               <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">👔 OUR TEAM</span>
-            </MOTION.div>
-            <MOTION.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight">
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight">
               The <span className="text-[#439CB0]">Leadership</span>
-            </MOTION.h2>
-            <MOTION.p variants={itemVariants} className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed">
+            </h2>
+            <p className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed">
               Meet the passionate professionals driving our success
-            </MOTION.p>
-          </MOTION.div>
+            </p>
+          </div>
           
-          <MOTION.div 
-            initial="hidden"
-            animate={teamInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {teamMembers.map((member) => (
-              <MOTION.div 
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member, index) => (
+              <div 
                 key={member.id}
-                variants={itemVariants}
+                ref={addToTeamCardRefs}
                 className="group relative rounded-xl overflow-hidden h-96 shadow-md hover:shadow-lg transition-all duration-300"
+                onMouseEnter={() => handleTeamCardHover(index, true)}
+                onMouseLeave={() => handleTeamCardHover(index, false)}
               >
                 {/* Team Member Image */}
                 <img 
                   src={member.image} 
                   alt={member.name} 
+                  ref={addToTeamImgRefs}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 
@@ -804,51 +1038,44 @@ const AboutUs = () => {
                     </div>
                   </div>
                 </div>
-              </MOTION.div>
+              </div>
             ))}
-          </MOTION.div>
+          </div>
         </div>
       </section>
 
       {/* Awards Section */}
       <section 
-        ref={awardsRef}
+        ref={awardsSectionRef}
         className="py-24 bg-[#E2E2E2]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <MOTION.div 
-            initial="hidden"
-            animate={awardsInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="text-center mb-16"
-          >
-            <MOTION.div variants={itemVariants} className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
               <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">🏆 RECOGNITION</span>
-            </MOTION.div>
-            <MOTION.h2 variants={itemVariants} className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight">
-              Awards & <span className="text-[#439CB0]">Accolades</span>
-            </MOTION.h2>
-            <MOTION.p variants={itemVariants} className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed">
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-[#262626] mb-4 leading-tight" ref={awardsTitleRef}>
+              {splitWords('Awards & Accolades', 'about-awards-headline-word')}
+            </h2>
+            <p className="text-lg text-[#262626]/80 max-w-2xl mx-auto font-light leading-relaxed" ref={awardsSubtitleRef}>
               Celebrating excellence in real estate lead generation
-            </MOTION.p>
-          </MOTION.div>
+            </p>
+          </div>
           
-          <MOTION.div 
-            initial="hidden"
-            animate={awardsInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {awards.map((award, index) => (
-              <MOTION.div 
+              <div 
                 key={index}
-                variants={itemVariants}
+                ref={addToAwardCardRefs}
                 className="bg-white rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-[#262626]/10 group"
+                onMouseEnter={() => handleAwardCardHover(index, true)}
+                onMouseLeave={() => handleAwardCardHover(index, false)}
               >
                 {/* Award Icon */}
                 <div className="w-16 h-16 bg-[#439CB0]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#439CB0]/20 transition-colors duration-300">
                   {React.cloneElement(award.icon, {
+                    ref: addToAwardIconRefs,
                     className: "w-8 h-8 text-[#439CB0] group-hover:text-[#153E42] transition-colors duration-300"
                   })}
                 </div>
@@ -857,69 +1084,13 @@ const AboutUs = () => {
                 <h3 className="text-xl font-dosis font-semibold text-[#262626] mb-2">{award.title}</h3>
                 <p className="text-[#262626]/80 text-sm mb-2 font-medium">{award.organization}</p>
                 <p className="text-[#439CB0] font-medium">{award.year}</p>
-              </MOTION.div>
+              </div>
             ))}
-          </MOTION.div>
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative py-20 bg-[#153E42] text-white overflow-hidden">
-        {/* Subtle background texture */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=10')] bg-cover bg-center"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <MOTION.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-dosis font-medium mb-6 leading-tight"
-          >
-            Start Your <span className="text-[#439CB0]">Lead Generation</span> Today
-          </MOTION.h2>
-          
-          <MOTION.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="text-lg text-white/80 mb-10 max-w-2xl mx-auto font-light leading-relaxed"
-          >
-            Our expert team is ready to guide you through every step
-          </MOTION.p>
-          
-          <MOTION.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="flex flex-col sm:flex-row justify-center gap-6"
-          >
-            <MOTION.button
-              initial="rest"
-              whileHover="hover"
-              animate="rest"
-              variants={buttonHover}
-              onClick={() => setIsBookingModalOpen(true)}
-              className="px-8 py-4 rounded-lg text-white font-medium shadow-lg"
-            >
-              🚀 Get Started
-            </MOTION.button>
-            <Link 
-              to="/contact" 
-              className="inline-flex items-center justify-center bg-transparent border-2 border-[#439CB0] hover:border-[#439CB0]/80 text-white font-medium py-4 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
-            >
-              Contact Us
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </Link>
-          </MOTION.div>
-        </div>
-      </section>
+      
     </div>
   );
 };
