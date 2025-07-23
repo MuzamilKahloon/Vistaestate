@@ -24,7 +24,6 @@ const Agents = () => {
   const [activeSort, setActiveSort] = useState('default');
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isThankYouModalOpen, setIsThankYouModalOpen] = useState(false);
-  const [isCreateAgentModalOpen, setIsCreateAgentModalOpen] = useState(false);
   const [agents, setAgents] = useState([
     {
       id: 1,
@@ -135,24 +134,6 @@ const Agents = () => {
       }
     }
   ]);
-
-  const [newAgent, setNewAgent] = useState({
-    name: '',
-    role: '',
-    phone: '',
-    email: '',
-    bio: '',
-    image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg', // Default agent image
-    properties: '',
-    experience: '',
-    rating: '',
-    social: {
-      facebook: '',
-      twitter: '',
-      instagram: '',
-      linkedin: ''
-    }
-  });
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -270,29 +251,30 @@ const Agents = () => {
       );
     }
 
-    // Agents grid scroll-triggered entrance animation
+    // Agents grid cards: instant appearance
     if (agentsGridRef.current) {
-      gsap.fromTo(
-        agentsCardRefs.current,
-        { opacity: 0, y: 80, scale: 0.85, rotate: -8, filter: 'blur(8px)' },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotate: 0,
-          filter: 'blur(0px)',
-          duration: 1.1,
-          stagger: 0.18,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: agentsGridRef.current,
-            start: 'top 80%',
-            end: 'bottom 60%',
-            toggleActions: 'play none none reverse',
-          },
+      agentsCardRefs.current.forEach(card => {
+        if (card) {
+          gsap.set(card, { opacity: 1, y: 0, scale: 1, rotate: 0, filter: 'blur(0px)' });
         }
-      );
+      });
     }
+  }, []);
+
+  useEffect(() => {
+    window.updateAgentProfile = (updatedProfile) => {
+      setAgents(prevAgents => {
+        const exists = prevAgents.some(agent => agent.email === updatedProfile.email);
+        if (exists) {
+          return prevAgents.map(agent =>
+            agent.email === updatedProfile.email ? { ...agent, ...updatedProfile } : agent
+          );
+        } else {
+          return [...prevAgents, { ...updatedProfile, id: prevAgents.length + 1 }];
+        }
+      });
+    };
+    return () => { window.updateAgentProfile = undefined; };
   }, []);
 
   const handleInputChange = (e) => {
@@ -301,25 +283,6 @@ const Agents = () => {
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleNewAgentChange = (e) => {
-    const { name, value } = e.target;
-    
-    if (name in newAgent.social) {
-      setNewAgent(prev => ({
-        ...prev,
-        social: {
-          ...prev.social,
-          [name]: value
-        }
-      }));
-    } else {
-      setNewAgent(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
   };
 
   const handleSubmit = (e) => {
@@ -339,43 +302,6 @@ const Agents = () => {
       challenge: '',
       consultationTime: ''
     });
-  };
-
-  const handleCreateAgentSubmit = (e) => {
-    e.preventDefault();
-    
-    // Create new agent object with all required fields
-    const agentToAdd = {
-      ...newAgent,
-      id: agents.length + 1,
-      properties: parseInt(newAgent.properties) || 0,
-      rating: parseFloat(newAgent.rating) || 4.5,
-      experience: newAgent.experience ? `${newAgent.experience} years` : '1 year'
-    };
-    
-    // Add the new agent to the list
-    setAgents(prev => [...prev, agentToAdd]);
-    
-    // Reset form and close modal
-    setNewAgent({
-      name: '',
-      role: '',
-      phone: '',
-      email: '',
-      bio: '',
-      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
-      properties: '',
-      experience: '',
-      rating: '',
-      social: {
-        facebook: '',
-        twitter: '',
-        instagram: '',
-        linkedin: ''
-      }
-    });
-    
-    setIsCreateAgentModalOpen(false);
   };
 
   // Sort agents based on active sort option
@@ -580,207 +506,6 @@ const Agents = () => {
     </div>
   );
 
-  // Create Agent Modal Component
-  const CreateAgentModal = () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
-      <div className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          {/* Modal Header */}
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-[#262626]">Create New Agent Profile</h2>
-              <p className="text-[#262626]/80">Add a new real estate agent to your team</p>
-            </div>
-            <button 
-              onClick={() => setIsCreateAgentModalOpen(false)}
-              className="text-[#262626]/60 hover:text-[#262626]"
-              aria-label="Close modal"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleCreateAgentSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Full Name (Required)</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newAgent.name}
-                  onChange={handleNewAgentChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Role/Position (Required)</label>
-                <input
-                  type="text"
-                  name="role"
-                  value={newAgent.role}
-                  onChange={handleNewAgentChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Phone Number (Required)</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={newAgent.phone}
-                  onChange={handleNewAgentChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Email Address (Required)</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={newAgent.email}
-                  onChange={handleNewAgentChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#262626] mb-1">Bio/Description</label>
-              <textarea
-                name="bio"
-                value={newAgent.bio}
-                onChange={handleNewAgentChange}
-                rows={3}
-                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white"
-                placeholder="Brief description of the agent's expertise"
-              ></textarea>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Properties Sold</label>
-                <input
-                  type="number"
-                  name="properties"
-                  value={newAgent.properties}
-                  onChange={handleNewAgentChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="e.g. 25"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Years of Experience</label>
-                <input
-                  type="number"
-                  name="experience"
-                  value={newAgent.experience}
-                  onChange={handleNewAgentChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="e.g. 5"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Rating (1-5)</label>
-                <input
-                  type="number"
-                  name="rating"
-                  value={newAgent.rating}
-                  onChange={handleNewAgentChange}
-                  min="1"
-                  max="5"
-                  step="0.1"
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="e.g. 4.5"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#262626] mb-1">Profile Image URL</label>
-              <input
-                type="url"
-                name="image"
-                value={newAgent.image}
-                onChange={handleNewAgentChange}
-                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white"
-                placeholder="https://example.com/agent.jpg"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Facebook Profile</label>
-                <input
-                  type="url"
-                  name="facebook"
-                  value={newAgent.social.facebook}
-                  onChange={handleNewAgentChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://facebook.com/username"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Twitter Profile</label>
-                <input
-                  type="url"
-                  name="twitter"
-                  value={newAgent.social.twitter}
-                  onChange={handleNewAgentChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://twitter.com/username"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Instagram Profile</label>
-                <input
-                  type="url"
-                  name="instagram"
-                  value={newAgent.social.instagram}
-                  onChange={handleNewAgentChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://instagram.com/username"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">LinkedIn Profile</label>
-                <input
-                  type="url"
-                  name="linkedin"
-                  value={newAgent.social.linkedin}
-                  onChange={handleNewAgentChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://linkedin.com/in/username"
-                />
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <button
-                type="submit"
-                className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-              >
-                ➕ Create Agent Profile
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-
   // Thank You Modal Component
   const ThankYouModal = () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
@@ -895,7 +620,6 @@ const Agents = () => {
       {/* Modals */}
       {isBookingModalOpen && <BookingModal />}
       {isThankYouModalOpen && <ThankYouModal />}
-      {isCreateAgentModalOpen && <CreateAgentModal />}
 
       {/* Hero Section */}
       <section 
@@ -972,15 +696,6 @@ const Agents = () => {
               </svg>
             </div>
             <div className="w-full md:w-auto flex items-center gap-4">
-              <button
-                onClick={() => setIsCreateAgentModalOpen(true)}
-                className="px-6 py-3 bg-[#439CB0] hover:bg-[#153E42] rounded-lg text-white font-medium shadow-lg flex items-center gap-2 transition-colors duration-300"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Create Agent
-              </button>
               <div className="flex items-center">
                 <span className="mr-3 text-[#262626] font-medium">Sort by:</span>
                 <select 

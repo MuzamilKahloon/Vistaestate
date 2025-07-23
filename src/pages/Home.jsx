@@ -66,80 +66,22 @@ const Home = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const carouselGroupRef = useRef(null);
 
- 
-
-  // Hero section refs for GSAP
+  // Restore refs for non-card GSAP animations
   const heroTextRef = useRef(null);
   const heroCardRef = useRef(null);
   const orbRef = useRef(null);
   const chartBarRef = useRef(null);
   const heroSectionRef = useRef(null);
+  const orbAccentRef = useRef(null);
+  const marqueeRef = useRef(null);
+  const marqueeInnerRef = useRef(null);
 
-  useEffect(() => {
-    // Animate headline words
-    gsap.set('.hero-headline-word', { opacity: 0, y: 30, scale: 0.95 });
-    gsap.to('.hero-headline-word', {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.5,
-      stagger: 0.13,
-      ease: 'power3.out',
-      delay: 0.2,
-    });
-    // Animate subtext words
-    gsap.set('.hero-subtext-word', { opacity: 0, y: 20, scale: 0.95 });
-    gsap.to('.hero-subtext-word', {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.4,
-      stagger: 0.08,
-      ease: 'power2.out',
-      delay: 1.2,
-    });
-    // Animate orb floating
-    gsap.to(orbRef.current, {
-      y: 30,
-      repeat: -1,
-      yoyo: true,
-      duration: 2.5,
-      ease: 'sine.inOut',
-    });
-    // Animate card entrance
-    gsap.fromTo(
-      heroCardRef.current,
-      { x: 80, y: 40, opacity: 0, scale: 0.95, filter: 'blur(8px)' },
-      { x: 0, y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power4.out', delay: 0.5 }
-    );
-    // Animate chart bar
-    gsap.fromTo(
-      chartBarRef.current,
-      { width: '0%' },
-      { width: '78%', duration: 1.2, ease: 'power2.out', delay: 1.6 }
-    );
-    // Parallax scroll effect (subtle)
-    gsap.to(heroTextRef.current, {
-      y: -20,
-      scrollTrigger: {
-        trigger: heroSectionRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 0.7,
-      },
-      ease: 'power1.out',
-    });
-    gsap.to(heroCardRef.current, {
-      y: 20,
-      scrollTrigger: {
-        trigger: heroSectionRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 0.7,
-      },
-      ease: 'power1.out',
-    });
-  }, []);
+  // Card refs for instant appearance (no animation)
+  const agentsSectionRef = useRef(null);
+  const agentCardRefs = useRef([]);
+  const serviceCardRefs = useRef([]);
+  const blogCardRefs = useRef([]);
+  const howStepCardRefs = useRef([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -167,9 +109,6 @@ const Home = () => {
       consultationTime: ''
     });
   };
-
-  // Remove animation variants
-  // Remove buttonHover and secondaryButtonHover objects
 
   // Testimonials data
   const testimonials = [
@@ -256,49 +195,13 @@ const Home = () => {
     }
   ];
 
-  useEffect(() => {
-    // Carousel group animation
-    let timeout;
-    const animateCarousel = () => {
-      if (carouselGroupRef.current) {
-        gsap.fromTo(
-          carouselGroupRef.current.children,
-          { x: 100, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'power3.out' }
-        );
-      }
-      timeout = setTimeout(() => {
-        if (carouselGroupRef.current) {
-          gsap.to(carouselGroupRef.current.children, {
-            x: -100,
-            opacity: 0,
-            duration: 0.7,
-            stagger: 0.1,
-            ease: 'power3.in',
-            onComplete: () => {
-              setCarouselIndex(prev => (prev + 3) % testimonials.length);
-            }
-          });
-        } else {
-          setCarouselIndex(prev => (prev + 3) % testimonials.length);
-        }
-      }, 3000);
-    };
-    animateCarousel();
+  // For carousel, just update index on interval (no animation)
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      setCarouselIndex(prev => (prev + 3) % testimonials.length);
+    }, 3000);
     return () => clearTimeout(timeout);
   }, [carouselIndex, testimonials.length]);
-
-  // Cursor animation on card hover
-  const handleTestimonialHover = (idx) => {
-    if (carouselGroupRef.current && carouselGroupRef.current.children[idx]) {
-      gsap.to(carouselGroupRef.current.children[idx], { scale: 1.05, boxShadow: '0 8px 32px 0 rgba(67,156,176,0.25), 0 1.5px 8px 0 rgba(21,62,66,0.10)', cursor: 'pointer', duration: 0.3 });
-    }
-  };
-  const handleTestimonialLeave = (idx) => {
-    if (carouselGroupRef.current && carouselGroupRef.current.children[idx]) {
-      gsap.to(carouselGroupRef.current.children[idx], { scale: 1, boxShadow: '', cursor: 'default', duration: 0.3 });
-    }
-  };
 
   // Booking Modal Component
   const BookingModal = () => {
@@ -738,221 +641,83 @@ const Home = () => {
     }
   ];
 
-  const agentsSectionRef = useRef(null);
-  const agentCardRefs = useRef([]);
-  const agentImgRefs = useRef([]);
-
+  // --- GSAP for non-card elements ---
   useEffect(() => {
-    // Animated hub for agents section
-    if (agentsSectionRef.current) {
+    // Animate headline words
+    gsap.set('.hero-headline-word', { opacity: 0, y: 30, scale: 0.95 });
+    gsap.to('.hero-headline-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      stagger: 0.13,
+      ease: 'power3.out',
+      delay: 0.2,
+    });
+    // Animate subtext words
+    gsap.set('.hero-subtext-word', { opacity: 0, y: 20, scale: 0.95 });
+    gsap.to('.hero-subtext-word', {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      stagger: 0.08,
+      ease: 'power2.out',
+      delay: 1.2,
+    });
+    // Animate orb floating
+    if (orbRef.current) {
+      gsap.to(orbRef.current, {
+        y: 30,
+        repeat: -1,
+        yoyo: true,
+        duration: 2.5,
+        ease: 'sine.inOut',
+      });
+    }
+    // Animate card entrance (hero card)
+    if (heroCardRef.current) {
       gsap.fromTo(
-        agentCardRefs.current,
-        { opacity: 0, y: 80, scale: 0.85, rotate: -8, filter: 'blur(8px)' },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotate: 0,
-          filter: 'blur(0px)',
-          duration: 1.1,
-          stagger: 0.18,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: agentsSectionRef.current,
-            start: 'top 80%',
-            end: 'bottom 60%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-      // Floating/parallax effect for agent images
-      agentImgRefs.current.forEach((img, i) => {
-        gsap.to(img, {
-          y: 18,
-          repeat: -1,
-          yoyo: true,
-          duration: 2.5 + i * 0.3,
-          ease: 'sine.inOut',
-        });
-      });
-    }
-  }, []);
-  // Magic hover effect
-  const handleAgentHover = idx => {
-    if (agentCardRefs.current[idx]) {
-      gsap.to(agentCardRefs.current[idx], {
-        scale: 1.07,
-        boxShadow: '0 0 32px 8px #439CB0, 0 8px 32px 0 rgba(67,156,176,0.25)',
-        rotate: gsap.utils.random(-4, 4),
-        filter: 'brightness(1.08) saturate(1.2)',
-        cursor: 'pointer',
-        duration: 0.35,
-        ease: 'power2.out',
-      });
-    }
-  };
-  const handleAgentLeave = idx => {
-    if (agentCardRefs.current[idx]) {
-      gsap.to(agentCardRefs.current[idx], {
-        scale: 1,
-        boxShadow: '',
-        rotate: 0,
-        filter: 'brightness(1) saturate(1)',
-        cursor: 'default',
-        duration: 0.35,
-        ease: 'power2.in',
-      });
-    }
-  };
-
-  const servicesSectionRef = useRef(null);
-  const serviceCardRefs = useRef([]);
-  const serviceIconRefs = useRef([]);
-
-  useEffect(() => {
-    // Scroll-triggered entrance animation
-    if (servicesSectionRef.current) {
-      gsap.fromTo(
-        serviceCardRefs.current,
-        { opacity: 0, y: 100, scale: 0.8, filter: 'blur(8px)' },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 1.1,
-          stagger: 0.15,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: servicesSectionRef.current,
-            start: 'top 80%',
-            end: 'bottom 60%',
-            toggleActions: 'play none none reverse',
-          },
-        }
+        heroCardRef.current,
+        { x: 80, y: 40, opacity: 0, scale: 0.95, filter: 'blur(8px)' },
+        { x: 0, y: 0, opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power4.out', delay: 0.5 }
       );
     }
-  }, []);
-  // Magic hover effect for service cards and icons
-  const handleServiceHover = idx => {
-    if (serviceCardRefs.current[idx]) {
-      gsap.to(serviceCardRefs.current[idx], {
-        scale: 1.08,
-        boxShadow: '0 0 32px 8px #439CB0, 0 8px 32px 0 rgba(67,156,176,0.25)',
-        filter: 'brightness(1.08) saturate(1.2)',
-        cursor: 'pointer',
-        duration: 0.35,
-        ease: 'power2.out',
-      });
-    }
-    if (serviceIconRefs.current[idx]) {
-      gsap.to(serviceIconRefs.current[idx], {
-        rotate: 20,
-        scale: 1.2,
-        duration: 0.4,
-        ease: 'elastic.out(1, 0.5)',
-      });
-    }
-  };
-  const handleServiceLeave = idx => {
-    if (serviceCardRefs.current[idx]) {
-      gsap.to(serviceCardRefs.current[idx], {
-        scale: 1,
-        boxShadow: '',
-        filter: 'brightness(1) saturate(1)',
-        cursor: 'default',
-        duration: 0.35,
-        ease: 'power2.in',
-      });
-    }
-    if (serviceIconRefs.current[idx]) {
-      gsap.to(serviceIconRefs.current[idx], {
-        rotate: 0,
-        scale: 1,
-        duration: 0.4,
-        ease: 'elastic.in(1, 0.5)',
-      });
-    }
-  };
-
-  const blogSectionRef = useRef(null);
-  const blogCardRefs = useRef([]);
-  const blogImgRefs = useRef([]);
-
-  useEffect(() => {
-    // Blog section scroll-triggered entrance animation
-    if (blogSectionRef.current) {
+    // Animate chart bar
+    if (chartBarRef.current) {
       gsap.fromTo(
-        blogCardRefs.current,
-        { opacity: 0, y: 80, scale: 0.85, rotateY: 16, filter: 'blur(8px)' },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotateY: 0,
-          filter: 'blur(0px)',
-          duration: 1.1,
-          stagger: 0.18,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: blogSectionRef.current,
-            start: 'top 80%',
-            end: 'bottom 60%',
-            toggleActions: 'play none none reverse',
-          },
-        }
+        chartBarRef.current,
+        { width: '0%' },
+        { width: '78%', duration: 1.2, ease: 'power2.out', delay: 1.6 }
       );
     }
-  }, []);
-  // Blog card/image hover effect
-  const handleBlogHover = idx => {
-    if (blogCardRefs.current[idx]) {
-      gsap.to(blogCardRefs.current[idx], {
-        scale: 1.06,
-        boxShadow: '0 0 32px 8px #439CB0, 0 8px 32px 0 rgba(67,156,176,0.25)',
-        filter: 'brightness(1.08) saturate(1.2)',
-        cursor: 'pointer',
-        duration: 0.35,
-        ease: 'power2.out',
+    // Parallax scroll effect (subtle)
+    if (heroTextRef.current && heroSectionRef.current) {
+      gsap.to(heroTextRef.current, {
+        y: -20,
+        scrollTrigger: {
+          trigger: heroSectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.7,
+        },
+        ease: 'power1.out',
       });
     }
-    if (blogImgRefs.current[idx]) {
-      gsap.to(blogImgRefs.current[idx], {
-        scale: 1.08,
-        rotateY: 8,
-        duration: 0.4,
-        ease: 'elastic.out(1, 0.5)',
+    if (heroCardRef.current && heroSectionRef.current) {
+      gsap.to(heroCardRef.current, {
+        y: 20,
+        scrollTrigger: {
+          trigger: heroSectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.7,
+        },
+        ease: 'power1.out',
       });
     }
-  };
-  const handleBlogLeave = idx => {
-    if (blogCardRefs.current[idx]) {
-      gsap.to(blogCardRefs.current[idx], {
-        scale: 1,
-        boxShadow: '',
-        filter: 'brightness(1) saturate(1)',
-        cursor: 'default',
-        duration: 0.35,
-        ease: 'power2.in',
-      });
-    }
-    if (blogImgRefs.current[idx]) {
-      gsap.to(blogImgRefs.current[idx], {
-        scale: 1,
-        rotateY: 0,
-        duration: 0.4,
-        ease: 'elastic.in(1, 0.5)',
-      });
-    }
-  };
-
-  // Marquee refs
-  const marqueeRef = useRef(null);
-  const marqueeInnerRef = useRef(null);
-
-  useEffect(() => {
+    // Marquee
     if (marqueeInnerRef.current) {
-      // Duplicate logos for seamless loop
       const marqueeWidth = marqueeInnerRef.current.scrollWidth / 2;
       gsap.to(marqueeInnerRef.current, {
         x: -marqueeWidth,
@@ -964,11 +729,7 @@ const Home = () => {
         },
       });
     }
-  }, []);
-
-  // Parallax/floating orb for the section
-  const orbAccentRef = useRef(null);
-  useEffect(() => {
+    // Parallax/floating orb for the section
     if (orbAccentRef.current) {
       gsap.to(orbAccentRef.current, {
         y: 30,
@@ -980,116 +741,30 @@ const Home = () => {
     }
   }, []);
 
-  // Enhanced GSAP animation for How It Works section
+  // --- Card appearance: instant, no animation ---
   useEffect(() => {
-    if (typeof window !== 'undefined' && document.querySelectorAll('.how-step-card').length) {
-      // Cards: pop, fade, slide up, stagger
-      gsap.set('.how-step-card', { opacity: 0, y: 80, scale: 0.92 });
-      gsap.to('.how-step-card', {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1.1,
-        stagger: 0.22,
-        ease: 'back.out(1.7)',
-        scrollTrigger: {
-          trigger: '#how-it-works',
-          start: 'top 80%',
-          end: 'bottom 60%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-      // Step numbers: count up, scale bounce
-      document.querySelectorAll('.how-step-card .step-number').forEach((el, idx) => {
-        gsap.fromTo(el, { scale: 0.7, opacity: 0 }, {
-          scale: 1.18,
-          opacity: 1,
-          duration: 0.7,
-          delay: 0.18 + idx * 0.22,
-          ease: 'back.out(2)',
-          onComplete: () => {
-            // Count up effect
-            const end = Number(el.textContent);
-            gsap.to({ val: 0 }, {
-              val: end,
-              duration: 0.7,
-              ease: 'power1.out',
-              onUpdate: function () {
-                el.textContent = Math.floor(this.targets()[0].val);
-              },
-              onComplete: function () {
-                el.textContent = end;
-              }
-            });
-          },
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 90%',
-            toggleActions: 'play none none reverse',
-          },
-        });
-        // Subtle bounce back to 1
-        gsap.to(el, {
-          scale: 1,
-          duration: 0.3,
-          delay: 0.9 + idx * 0.22,
-          ease: 'elastic.out(1,0.5)',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 90%',
-            toggleActions: 'play none none reverse',
-          },
-        });
-      });
-      // Arrows: draw line, then fade in arrowhead
-      document.querySelectorAll('#how-it-works svg path').forEach((el, i) => {
-        gsap.set(el, { strokeDasharray: el.getTotalLength(), strokeDashoffset: el.getTotalLength() });
-        gsap.to(el, {
-          strokeDashoffset: 0,
-          duration: 0.7,
-          delay: 0.5 + i * 0.22,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '#how-it-works',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        });
-      });
-      document.querySelectorAll('#how-it-works svg polygon').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0 }, {
-          opacity: 1,
-          duration: 0.3,
-          delay: 1.1 + i * 0.22,
-          ease: 'power1.out',
-          scrollTrigger: {
-            trigger: '#how-it-works',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        });
-      });
-      // Card hover: float, glow
-      document.querySelectorAll('.how-step-card').forEach((el) => {
-        el.addEventListener('mouseenter', () => {
-          gsap.to(el, { y: -10, boxShadow: '0 8px 32px 0 rgba(67,156,176,0.25), 0 1.5px 8px 0 rgba(21,62,66,0.10)', scale: 1.04, duration: 0.35, ease: 'power2.out' });
-        });
-        el.addEventListener('mouseleave', () => {
-          gsap.to(el, { y: 0, boxShadow: '', scale: 1, duration: 0.35, ease: 'power2.in' });
-        });
-      });
-    }
+    // Testimonials, Agents, Services, Blog, How-it-works steps: set visible instantly
+    [
+      ...agentCardRefs.current,
+      ...serviceCardRefs.current,
+      ...blogCardRefs.current,
+      ...howStepCardRefs.current,
+    ].forEach(card => {
+      if (card) {
+        gsap.set(card, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' });
+      }
+    });
   }, []);
 
   return (
-    <div className="font-quicksand antialiased text-[#262626] bg-[#E2E2E2]">
+    <div className="font-quicksand antialiased text-[#262626] bg-[#E2E2E2] scroll-smooth">
       {/* Modals */}
       {isBookingModalOpen && <BookingModal />}
       {isThankYouModalOpen && <ThankYouModal />}
       {isTestimonialModalOpen && <TestimonialModal />}
 
       {/* Hero Section */}
-      <section ref={heroSectionRef} className="relative min-h-screen flex items-center justify-center bg-[#153E42] overflow-hidden">
+      <section ref={heroSectionRef} id="hero" className="relative min-h-screen flex items-center justify-center bg-[#153E42] overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img 
@@ -1123,7 +798,7 @@ const Home = () => {
           </div>
           {/* Right: Card, previous size, improved glassmorphism */}
           <div ref={heroCardRef} className="w-full md:w-1/2 flex justify-center items-center">
-            <div className="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8 max-w-md w-full border border-[#439CB0]/30 overflow-hidden" style={{boxShadow:'0 8px 32px 0 rgba(67,156,176,0.25), 0 1.5px 8px 0 rgba(21,62,66,0.10)'}}>
+            <div ref={heroCardRef} className="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8 max-w-md w-full border border-[#439CB0]/30 overflow-hidden" style={{boxShadow:'0 8px 32px 0 rgba(67,156,176,0.25), 0 1.5px 8px 0 rgba(21,62,66,0.10)'}}>
               {/* Avatar and title */}
               <div className="flex items-center mb-4">
                 <img src={AVATAR_URL} alt="Manager" className="w-12 h-12 rounded-full border-2 border-[#439CB0] shadow-md mr-3"/>
@@ -1145,9 +820,9 @@ const Home = () => {
                   <span className="text-2xl font-bold text-[#153E42] drop-shadow-sm">2m 14s</span>
                 </div>
                 {/* Mini chart */}
-                <div className="mt-6">
+                <div ref={chartBarRef} className="mt-6">
                   <div className="h-2 w-full bg-[#E2E2E2] rounded-full overflow-hidden">
-                    <div ref={chartBarRef} className="h-2 bg-gradient-to-r from-[#439CB0] to-[#153E42] rounded-full transition-all duration-700" style={{ width: '78%' }}></div>
+                    <div className="h-2 bg-gradient-to-r from-[#439CB0] to-[#153E42] rounded-full transition-all duration-700" style={{ width: '78%' }}></div>
                   </div>
                   <div className="flex justify-between text-xs text-[#262626]/60 mt-1">
                     <span>Lead Pool</span>
@@ -1169,9 +844,8 @@ const Home = () => {
         </div>
       </section>
 
-
       {/* Testimonials Section */}
-      <section id="testimonials" className="relative py-24 bg-[#153E42] overflow-x-hidden">
+      <section ref={agentsSectionRef} id="testimonials" className="relative py-24 bg-[#153E42] overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
@@ -1191,13 +865,11 @@ const Home = () => {
               className="flex gap-8 testimonials-carousel"
               style={{ willChange: 'transform' }}
             >
-              {testimonials.slice(carouselIndex, carouselIndex + 3).map((testimonial, idx) => (
+              {testimonials.slice(carouselIndex, carouselIndex + 3).map((testimonial) => (
                 <div
                   key={testimonial.id}
                   className="testimonial-card group flex-shrink-0 w-96 bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl p-6 cursor-pointer relative overflow-hidden transition-all duration-300"
                   style={{ minWidth: '24rem', maxWidth: '24rem', height: '22rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
-                  onMouseEnter={() => handleTestimonialHover(idx)}
-                  onMouseLeave={() => handleTestimonialLeave(idx)}
                 >
                   {/* Video Reveal on Hover */}
                   <div className={`testimonial-video absolute inset-0 flex items-center justify-center bg-black/90 z-20 transition-all duration-500 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto`} style={{ borderRadius: '1rem' }}>
@@ -1287,9 +959,8 @@ const Home = () => {
         </div>
       </section>
 
-
-       {/* How It Works Section */}
-       <section id="how-it-works" className="relative py-24 bg-[#E2E2E2] overflow-x-hidden">
+      {/* How It Works Section */}
+      <section ref={agentsSectionRef} id="how-it-works" className="relative py-24 bg-[#E2E2E2] overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center bg-[#439CB0]/10 border border-[#439CB0]/20 rounded-full px-4 py-2 mb-6">
@@ -1305,7 +976,7 @@ const Home = () => {
           {/* Steps Row */}
           <div className="relative flex flex-col md:flex-row items-center justify-center gap-8 md:gap-0">
             {/* Step 1 */}
-            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[220px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+            <div ref={howStepCardRefs.current[0]} className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[220px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
               <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">1</div>
               <div className="text-xl font-bold text-[#153E42] mb-2">Neighborhood Search</div>
               <div className="text-[#439CB0] font-medium text-base mb-1">Skip Tracing</div>
@@ -1317,7 +988,7 @@ const Home = () => {
               <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
             </svg>
             {/* Step 2 */}
-            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+            <div ref={howStepCardRefs.current[1]} className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
               <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">2</div>
               <div className="text-xl font-bold text-[#153E42] mb-2">Cold Caller</div>
             </div>
@@ -1327,7 +998,7 @@ const Home = () => {
               <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
             </svg>
             {/* Step 3 */}
-            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+            <div ref={howStepCardRefs.current[2]} className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
               <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">3</div>
               <div className="text-xl font-bold text-[#153E42] mb-2">Lead Verifies</div>
             </div>
@@ -1337,7 +1008,7 @@ const Home = () => {
               <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
             </svg>
             {/* Step 4 */}
-            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+            <div ref={howStepCardRefs.current[3]} className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
               <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">4</div>
               <div className="text-xl font-bold text-[#153E42] mb-2">QA</div>
             </div>
@@ -1347,7 +1018,7 @@ const Home = () => {
               <polygon points="70,20 62,16 62,24" fill="#439CB0"/>
             </svg>
             {/* Step 5 */}
-            <div className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
+            <div ref={howStepCardRefs.current[4]} className="how-step-card group relative z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-xl rounded-2xl border border-[#439CB0]/20 shadow-2xl px-8 py-10 mx-2 min-w-[180px] max-w-xs transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-[#439CB0]/60">
               <div className="step-number text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#439CB0] to-[#153E42] mb-4 drop-shadow-lg">5</div>
               <div className="text-xl font-bold text-[#153E42] mb-2">Agent</div>
             </div>
@@ -1356,10 +1027,7 @@ const Home = () => {
       </section>
 
       {/* Meet Our Agents */}
-      <section 
-        ref={agentsSectionRef}
-        className="py-24 bg-[#E2E2E2]"
-      >
+      <section className="py-24 bg-[#E2E2E2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div 
@@ -1385,13 +1053,10 @@ const Home = () => {
                 key={index}
                 ref={el => agentCardRefs.current[index] = el}
                 className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-[#262626]/10"
-                onMouseEnter={() => handleAgentHover(index)}
-                onMouseLeave={() => handleAgentLeave(index)}
               >
                 {/* Agent Image */}
                 <div className="relative h-72 overflow-hidden">
                   <img 
-                    ref={el => agentImgRefs.current[index] = el}
                     src={agent.image} 
                     alt={agent.name} 
                     className="w-full h-full object-cover"
@@ -1427,10 +1092,7 @@ const Home = () => {
       </section>
 
       {/* Our Services */}
-      <section 
-        ref={servicesSectionRef}
-        className="py-24 bg-[#E2E2E2]"
-      >
+      <section className="py-24 bg-[#E2E2E2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div 
@@ -1456,12 +1118,9 @@ const Home = () => {
                 key={index}
                 ref={el => serviceCardRefs.current[index] = el}
                 className="bg-white rounded-xl p-8 hover:shadow-lg transition-all duration-300 border border-[#262626]/10 group"
-                onMouseEnter={() => handleServiceHover(index)}
-                onMouseLeave={() => handleServiceLeave(index)}
               >
                 {/* Service Icon */}
                 <div 
-                  ref={el => serviceIconRefs.current[index] = el}
                   className="w-16 h-16 bg-[#439CB0]/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#439CB0]/20 transition-colors duration-300"
                 >
                   {React.cloneElement(service.icon, {
@@ -1481,10 +1140,7 @@ const Home = () => {
       </section>
 
       {/* From Our Blog */}
-      <section 
-        ref={blogSectionRef}
-        className="py-24 bg-[#E2E2E2]"
-      >
+      <section className="py-24 bg-[#E2E2E2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div 
@@ -1510,13 +1166,10 @@ const Home = () => {
                 key={index}
                 ref={el => blogCardRefs.current[index] = el}
                 className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-[#262626]/10"
-                onMouseEnter={() => handleBlogHover(index)}
-                onMouseLeave={() => handleBlogLeave(index)}
               >
                 {/* Post Image */}
                 <div className="h-60 overflow-hidden">
                   <img 
-                    ref={el => blogImgRefs.current[index] = el}
                     src={post.image} 
                     alt={post.title} 
                     className="w-full h-full object-cover"
@@ -1574,11 +1227,6 @@ const Home = () => {
         </div>
         </div>
       </section>
-
-     
-
-
-            
     </div>
   );
 };

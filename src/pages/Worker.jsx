@@ -6,7 +6,7 @@ gsap.registerPlugin(ScrollTrigger);
 const Worker = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSort, setActiveSort] = useState('default');
-  const [workers, setWorkers] = useState([
+  const [workers] = useState([
     {
       id: 1,
       name: 'James Wilson',
@@ -117,79 +117,6 @@ const Worker = () => {
     }
   ]);
 
-  const [newWorker, setNewWorker] = useState({
-    name: '',
-    role: '',
-    phone: '',
-    email: '',
-    bio: '',
-    image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
-    experience: '',
-    rating: '',
-    services: [],
-    social: {
-      facebook: '',
-      twitter: '',
-      instagram: '',
-      linkedin: ''
-    }
-  });
-
-  const [isCreateWorkerModalOpen, setIsCreateWorkerModalOpen] = useState(false);
-
-  const handleNewWorkerChange = (e) => {
-    const { name, value } = e.target;
-    
-    if (name in newWorker.social) {
-      setNewWorker(prev => ({
-        ...prev,
-        social: {
-          ...prev.social,
-          [name]: value
-        }
-      }));
-    } else {
-      setNewWorker(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
-
-  const handleCreateWorkerSubmit = (e) => {
-    e.preventDefault();
-    
-    const workerToAdd = {
-      ...newWorker,
-      id: workers.length + 1,
-      rating: parseFloat(newWorker.rating) || 4.5,
-      experience: newWorker.experience ? `${newWorker.experience} years` : '1 year',
-      services: newWorker.services.length > 0 ? newWorker.services : ['General Maintenance']
-    };
-    
-    setWorkers(prev => [...prev, workerToAdd]);
-    
-    setNewWorker({
-      name: '',
-      role: '',
-      phone: '',
-      email: '',
-      bio: '',
-      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
-      experience: '',
-      rating: '',
-      services: [],
-      social: {
-        facebook: '',
-        twitter: '',
-        instagram: '',
-        linkedin: ''
-      }
-    });
-    
-    setIsCreateWorkerModalOpen(false);
-  };
-
   // Sort workers based on active sort option
   const sortedWorkers = [...workers].sort((a, b) => {
     if (activeSort === 'rating') return b.rating - a.rating;
@@ -203,204 +130,6 @@ const Worker = () => {
            worker.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
            worker.services.some(service => service.toLowerCase().includes(searchQuery.toLowerCase()));
   });
-
-  // Create Worker Modal Component
-  const CreateWorkerModal = () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
-      <div className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          {/* Modal Header */}
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-[#262626]">Add New Worker</h2>
-              <p className="text-[#262626]/80">Add a new skilled professional to your team</p>
-            </div>
-            <button 
-              onClick={() => setIsCreateWorkerModalOpen(false)}
-              className="text-[#262626]/60 hover:text-[#262626]"
-              aria-label="Close modal"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleCreateWorkerSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-           <button 
-              onClick={() => setIsCreateWorkerModalOpen(false)}
-              className="text-[#262626]/60 hover:text-[#262626]"
-              aria-label="Close modal"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>      <label className="block text-sm font-medium text-[#262626] mb-1">Full Name (Required)</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newWorker.name}
-                  onChange={handleNewWorkerChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Role/Position (Required)</label>
-                <input
-                  type="text"
-                  name="role"
-                  value={newWorker.role}
-                  onChange={handleNewWorkerChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Phone Number (Required)</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={newWorker.phone}
-                  onChange={handleNewWorkerChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Email Address (Required)</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={newWorker.email}
-                  onChange={handleNewWorkerChange}
-                  required
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#262626] mb-1">Bio/Description</label>
-              <textarea
-                name="bio"
-                value={newWorker.bio}
-                onChange={handleNewWorkerChange}
-                rows={3}
-                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white"
-                placeholder="Brief description of the worker's expertise"
-              ></textarea>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Years of Experience</label>
-                <input
-                  type="number"
-                  name="experience"
-                  value={newWorker.experience}
-                  onChange={handleNewWorkerChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="e.g. 5"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Rating (1-5)</label>
-                <input
-                  type="number"
-                  name="rating"
-                  value={newWorker.rating}
-                  onChange={handleNewWorkerChange}
-                  min="1"
-                  max="5"
-                  step="0.1"
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="e.g. 4.5"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#262626] mb-1">Profile Image URL</label>
-              <input
-                type="url"
-                name="image"
-                value={newWorker.image}
-                onChange={handleNewWorkerChange}
-                className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white"
-                placeholder="https://example.com/worker.jpg"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Facebook Profile</label>
-                <input
-                  type="url"
-                  name="facebook"
-                  value={newWorker.social.facebook}
-                  onChange={handleNewWorkerChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://facebook.com/username"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Twitter Profile</label>
-                <input
-                  type="url"
-                  name="twitter"
-                  value={newWorker.social.twitter}
-                  onChange={handleNewWorkerChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://twitter.com/username"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">Instagram Profile</label>
-                <input
-                  type="url"
-                  name="instagram"
-                  value={newWorker.social.instagram}
-                  onChange={handleNewWorkerChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://instagram.com/username"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#262626] mb-1">LinkedIn Profile</label>
-                <input
-                  type="url"
-                  name="linkedin"
-                  value={newWorker.social.linkedin}
-                  onChange={handleNewWorkerChange}
-                  className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white"
-                  placeholder="https://linkedin.com/in/username"
-                />
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <button
-                type="submit"
-                className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300"
-              >
-                ➕ Add Worker Profile
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
 
   const heroHeadlineRef = useRef(null);
   const heroSubRef = useRef(null);
@@ -574,6 +303,15 @@ const Worker = () => {
         ease: 'power1.out',
       });
     }
+
+    // Workers grid cards: instant appearance
+    if (workersGridRef.current) {
+      workersCardRefs.current.forEach(card => {
+        if (card) {
+          gsap.set(card, { opacity: 1, y: 0, scale: 1, rotate: 0, filter: 'blur(0px)' });
+        }
+      });
+    }
   }, []);
 
   // Button hover GSAP effect
@@ -629,7 +367,7 @@ const Worker = () => {
 
   return (
     <div className="font-quicksand antialiased text-[#262626] bg-[#E2E2E2]">
-      {isCreateWorkerModalOpen && <CreateWorkerModal />}
+      
 
       {/* Hero Section */}
       <section ref={heroSectionRef} className="relative min-h-screen flex items-center justify-center bg-[#153E42] overflow-hidden">
@@ -704,15 +442,7 @@ const Worker = () => {
               </svg>
             </div>
             <div className="w-full md:w-auto flex items-center gap-4">
-              <button
-                onClick={() => setIsCreateWorkerModalOpen(true)}
-                className="px-6 py-3 bg-[#439CB0] hover:bg-[#153E42] rounded-lg text-white font-medium shadow-lg flex items-center gap-2 transition-colors duration-300"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Add Worker
-              </button>
+              
               <div className="flex items-center">
                 <span className="mr-3 text-[#262626] font-medium">Sort by:</span>
                 <select 

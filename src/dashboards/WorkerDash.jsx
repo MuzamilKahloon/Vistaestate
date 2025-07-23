@@ -21,6 +21,41 @@ const WorkerDashboard = () => {
   const [notification, setNotification] = useState(null);
   const [showStatusUpdate, setShowStatusUpdate] = useState(false);
   const [newStatus, setNewStatus] = useState('');
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profile, setProfile] = useState({
+    name: 'James Wilson',
+    role: 'Master Plumber',
+    phone: '+1 (555) 123-4567',
+    email: 'james@proplumbing.com',
+    bio: 'Specializing in residential and commercial plumbing with 12 years experience',
+    image: 'https://images.pexels.com/photos/3862632/pexels-photo-3862632.jpeg',
+    experience: '12 years',
+    rating: 4.9,
+    services: ['Pipe Repair', 'Installation', 'Drain Cleaning'],
+    social: {
+      facebook: '#',
+      twitter: '#',
+      instagram: '#',
+      linkedin: '#'
+    }
+  });
+  const [editProfile, setEditProfile] = useState(profile);
+  const handleProfileChange = e => {
+    const { name, value } = e.target;
+    if (name in editProfile.social) {
+      setEditProfile(prev => ({ ...prev, social: { ...prev.social, [name]: value } }));
+    } else if (name === 'services') {
+      setEditProfile(prev => ({ ...prev, services: value.split(',').map(s => s.trim()) }));
+    } else {
+      setEditProfile(prev => ({ ...prev, [name]: value }));
+    }
+  };
+  const handleProfileSubmit = e => {
+    e.preventDefault();
+    setProfile(editProfile);
+    setShowProfileModal(false);
+    if (window.updateWorkerProfile) window.updateWorkerProfile(editProfile);
+  };
 
   const [leads, setLeads] = useState([
     {
@@ -229,6 +264,131 @@ const WorkerDashboard = () => {
       )}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Business Profile Card */}
+        <div className="mb-12 flex flex-col md:flex-row gap-8 items-center justify-between">
+          <div className="relative bg-white/80 backdrop-blur-xl border border-[#439CB0]/20 shadow-2xl rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 w-full md:w-2/3">
+            <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-lg border-4 border-[#439CB0]/30">
+              <img src={profile.image} alt={profile.name} className="w-full h-full object-cover" />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#153E42]/80 to-transparent h-1/2"></div>
+            </div>
+            <div className="flex-1 flex flex-col gap-2">
+              <h2 className="text-3xl font-bold text-[#153E42]">{profile.name}</h2>
+              <p className="text-lg text-[#439CB0] font-semibold">{profile.role}</p>
+              <p className="text-[#262626] mb-2">{profile.bio}</p>
+              <div className="flex flex-wrap gap-4 text-[#262626] text-sm">
+                <span><Phone className="inline w-4 h-4 mr-1" /> {profile.phone}</span>
+                <span><Mail className="inline w-4 h-4 mr-1" /> {profile.email}</span>
+              </div>
+              <div className="flex gap-6 mt-2">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-[#439CB0]">{profile.experience}</div>
+                  <div className="text-xs text-[#153E42]">Experience</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-[#439CB0]">{profile.rating}</div>
+                  <div className="text-xs text-[#153E42]">Rating</div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {profile.services.map((service, idx) => (
+                  <span key={idx} className="bg-[#439CB0]/30 text-[#153E42] text-xs px-3 py-1 rounded-full">{service}</span>
+                ))}
+              </div>
+              <div className="flex gap-3 mt-4">
+                <a href={profile.social.facebook} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
+                <a href={profile.social.twitter} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-twitter"></i></a>
+                <a href={profile.social.instagram} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
+                <a href={profile.social.linkedin} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+            <button onClick={() => { setEditProfile(profile); setShowProfileModal(true); }} className="absolute top-4 right-4 px-4 py-2 bg-[#439CB0] hover:bg-[#153E42] text-white rounded-lg shadow transition-all font-semibold">Edit Profile</button>
+          </div>
+        </div>
+        {/* Profile Edit Modal */}
+        {showProfileModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
+            <div className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-[#262626]">Edit Business Profile</h2>
+                    <p className="text-[#262626]/80">Update your public worker profile</p>
+                  </div>
+                  <button onClick={() => setShowProfileModal(false)} className="text-[#262626]/60 hover:text-[#262626]" aria-label="Close modal">
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+                <form onSubmit={handleProfileSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Full Name (Required)</label>
+                      <input type="text" name="name" value={editProfile.name} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Role/Position (Required)</label>
+                      <input type="text" name="role" value={editProfile.role} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Phone Number (Required)</label>
+                      <input type="tel" name="phone" value={editProfile.phone} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Email Address (Required)</label>
+                      <input type="email" name="email" value={editProfile.email} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Bio/Description</label>
+                    <textarea name="bio" value={editProfile.bio} onChange={handleProfileChange} rows={3} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white" placeholder="Brief description of the worker's expertise"></textarea>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Years of Experience</label>
+                      <input type="text" name="experience" value={editProfile.experience} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 5 years" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Rating (1-5)</label>
+                      <input type="number" name="rating" value={editProfile.rating} onChange={handleProfileChange} min="1" max="5" step="0.1" className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 4.5" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Profile Image URL</label>
+                    <input type="url" name="image" value={editProfile.image} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white" placeholder="https://example.com/worker.jpg" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Services (comma separated)</label>
+                    <input type="text" name="services" value={editProfile.services.join(', ')} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white" placeholder="e.g. Pipe Repair, Installation, Drain Cleaning" />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Facebook Profile</label>
+                      <input type="url" name="facebook" value={editProfile.social.facebook} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://facebook.com/username" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Twitter Profile</label>
+                      <input type="url" name="twitter" value={editProfile.social.twitter} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://twitter.com/username" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">Instagram Profile</label>
+                      <input type="url" name="instagram" value={editProfile.social.instagram} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://instagram.com/username" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-[#262626] mb-1">LinkedIn Profile</label>
+                      <input type="url" name="linkedin" value={editProfile.social.linkedin} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://linkedin.com/in/username" />
+                    </div>
+                  </div>
+                  <div className="pt-4">
+                    <button type="submit" className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Save Profile</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Search and Filters */}
         <div className="mb-6 p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-[#439CB0]/20 shadow-xl flex flex-col md:flex-row justify-between items-center">
           <div className="relative w-full md:w-1/3 mb-4 md:mb-0">

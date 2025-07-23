@@ -538,6 +538,33 @@ const AboutUs = () => {
       },
     });
 
+    // VALUES SECTION CARDS: instant appearance
+    if (valuesSectionRef.current) {
+      valueCardRefs.current.forEach(card => {
+        if (card) {
+          gsap.set(card, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' });
+        }
+      });
+    }
+
+    // TEAM SECTION CARDS: instant appearance
+    if (teamSectionRef.current) {
+      teamCardRefs.current.forEach(card => {
+        if (card) {
+          gsap.set(card, { opacity: 1, y: 0, scale: 1, rotate: 0, filter: 'blur(0px)' });
+        }
+      });
+    }
+
+    // AWARDS SECTION CARDS: instant appearance
+    if (awardsSectionRef.current) {
+      awardCardRefs.current.forEach(card => {
+        if (card) {
+          gsap.set(card, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' });
+        }
+      });
+    }
+
     // Cleanup function
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
