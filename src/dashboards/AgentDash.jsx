@@ -198,22 +198,6 @@ const AgentDashboard = () => {
       }
     ]
   };
-  const donutChartData = {
-    labels: ['Website', 'Referral', 'Cold Call', 'Open House', 'Social Media'],
-    datasets: [{
-      data: [12, 19, 8, 5, 3],
-      backgroundColor: [
-        'rgba(59, 130, 246, 0.8)',
-        'rgba(16, 185, 129, 0.8)',
-        'rgba(249, 115, 22, 0.8)',
-        'rgba(139, 92, 246, 0.8)',
-        'rgba(236, 72, 153, 0.8)'
-      ],
-      borderColor: 'rgba(17, 24, 39, 0.8)',
-      borderWidth: 2,
-      cutout: '70%',
-    }]
-  };
   const areaChartData = {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
@@ -277,34 +261,6 @@ const AgentDashboard = () => {
           stepSize: 5
         },
         beginAtZero: true
-      }
-    }
-  };
-  const donutChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'right',
-        labels: {
-          color: '#262626',
-          font: {
-            weight: '500'
-          },
-          padding: 20,
-          usePointStyle: true,
-          pointStyle: 'circle'
-        }
-      },
-      tooltip: {
-        backgroundColor: '#fff',
-        titleColor: '#262626',
-        bodyColor: '#262626',
-        borderColor: '#439CB0',
-        borderWidth: 1,
-        padding: 12,
-        boxShadow: '0px 2px 8px rgba(0,0,0,0.1)',
-        cornerRadius: 8
       }
     }
   };
@@ -627,20 +583,67 @@ const AgentDashboard = () => {
         </div>
         {/* Second Row with Charts */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Lead Status Distribution Donut Chart */}
           <div className="p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-[#439CB0]/20 shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-sm text-[#439CB0] mb-1 font-semibold">Lead Sources</p>
+                <p className="text-sm text-[#439CB0] mb-1 font-semibold">Lead Status</p>
                 <p className="text-xl font-bold">Distribution</p>
               </div>
               <div className="p-3 rounded-full bg-[#439CB0]/10">
-                <Building className="w-6 h-6 text-[#439CB0]" />
+                <Target className="w-6 h-6 text-[#439CB0]" />
               </div>
             </div>
             <div className="h-60">
               <Pie 
-                data={donutChartData} 
-                options={donutChartOptions} 
+                data={{
+                  labels: ['Assigned', 'In Progress', 'Follow Up', 'Contracted', 'Closed'],
+                  datasets: [{
+                    data: [
+                      stats.assigned,
+                      stats.inProgress,
+                      stats.followUp,
+                      stats.contracted,
+                      stats.closed
+                    ],
+                    backgroundColor: [
+                      'rgba(59, 130, 246, 0.8)', // Assigned - blue
+                      'rgba(251, 191, 36, 0.8)', // In Progress - yellow
+                      'rgba(249, 115, 22, 0.8)', // Follow Up - orange
+                      'rgba(139, 92, 246, 0.8)', // Contracted - indigo
+                      'rgba(16, 185, 129, 0.8)'  // Closed - green
+                    ],
+                    borderColor: 'rgba(17, 24, 39, 0.8)',
+                    borderWidth: 2,
+                    cutout: '70%',
+                  }]
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'right',
+                      labels: {
+                        color: '#262626',
+                        font: { weight: '500' },
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                      }
+                    },
+                    tooltip: {
+                      backgroundColor: '#fff',
+                      titleColor: '#262626',
+                      bodyColor: '#262626',
+                      borderColor: '#439CB0',
+                      borderWidth: 1,
+                      padding: 12,
+                      boxShadow: '0px 2px 8px rgba(0,0,0,0.1)',
+                      cornerRadius: 8
+                    }
+                  }
+                }}
               />
             </div>
           </div>

@@ -12,11 +12,11 @@ const agentsHeroWords = [
 ];
 const agentsSubWords = [
   { text: 'Dedicated', className: 'text-white' },
-  { text: 'professionals', className: 'text-[#439CB0]' },
+  { text: 'professionals', className: 'text-white' },
   { text: 'with', className: 'text-white' },
-  { text: 'extensive', className: 'text-[#439CB0]' },
+  { text: 'extensive', className: 'text-white' },
   { text: 'market', className: 'text-white' },
-  { text: 'knowledge', className: 'text-[#439CB0]' },
+  { text: 'knowledge', className: 'text-white' },
 ];
 
 const Agents = () => {

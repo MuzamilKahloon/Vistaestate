@@ -531,7 +531,7 @@ const Marketing = () => {
               <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">📈 MARKETING SERVICES</span>
             </div>
             <h1 ref={heroHeadlineRef} className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-white mb-4 leading-tight">
-              {['Your', 'leads', 'should', 'know', 'your', 'name', <span key="before" className="text-[#439CB0]">before</span>, 'they', 'ever', 'answer', 'the', 'phone.'].map((word, i) => (
+              {['Your', 'leads', 'should', 'know', 'your', 'name', 'they', 'ever', 'answer', 'the', 'phone.'].map((word, i) => (
                 <span key={i} className="marketing-hero-headline-word inline-block mr-2">{word}</span>
               ))}
             </h1>

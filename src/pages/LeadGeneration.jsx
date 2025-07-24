@@ -555,7 +555,7 @@ const LeadGeneration = () => {
               <span className="text-[#439CB0] font-medium text-xs tracking-wide whitespace-nowrap">📞 LEAD GENERATION</span>
             </div>
             <h1 ref={heroHeadlineRef} className="text-3xl md:text-4xl lg:text-5xl font-dosis font-medium text-white mb-4 leading-tight">
-              {['We', 'play', 'on', 'the', 'numbers', 'so', 'you', 'only', 'work', 'with', <span key="closings" className="text-[#439CB0]">closings.</span>].map((word, i) => (
+              {['We', 'play', 'on', 'the', 'numbers', 'so', 'you', 'only', 'work', 'with',].map((word, i) => (
                 <span key={i} className="leadgen-hero-headline-word inline-block mr-2">{word}</span>
               ))}
             </h1>
