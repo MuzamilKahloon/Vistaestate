@@ -214,13 +214,17 @@ const Navbar = () => {
   ];
 
   return (
-    <nav ref={navbarRef} className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-xl shadow-lg py-2 border-b border-[#439CB0]/10' : 'bg-white/80 backdrop-blur-xl py-4 border-b border-[#439CB0]/10'}`} style={{ boxShadow: isScrolled ? '0 8px 32px 0 rgba(67,156,176,0.10)' : '0 2px 8px 0 rgba(67,156,176,0.05)' }}>
+    <nav ref={navbarRef} className={`fixed w-full top-0 z-50 transition-all duration-300 bg-[#FFFFFF] border-b border-[#439CB0]/10 ${isScrolled ? 'shadow-lg py-2' : 'py-4'}`} style={{ boxShadow: isScrolled ? '0 8px 32px 0 rgba(67,156,176,0.10)' : '0 2px 8px 0 rgba(67,156,176,0.05)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-           {/* Logo */}
-           <Link to="/" className="flex items-center space-x-2">
-           <img src={logo} alt="VistaEstate Logo" className="h-10 w-auto ml-5 mb-2" />
-  
+          {/* Logo with hover effect */}
+          <Link to="/" className="flex items-center mt-2 ">
+            <img 
+              src={logo} 
+              alt="VistaEstate Logo" 
+              className="h-10 w-auto ml-5 mb-2 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_16px_2px_#439CB0,0_2px_8px_0_rgba(67,156,176,0.18)] group-hover:brightness-110"
+              style={{ borderRadius: '0.5rem' }}
+            />
           </Link>
 
 

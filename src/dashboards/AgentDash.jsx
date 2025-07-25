@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Clock, User, Phone, MapPin, DollarSign, TrendingUp, PlayCircle, 
   Edit, Trash2, Mail, MessageSquare, Search, Filter, Download, MoreVertical, 
-  Home, Users, Building, Target, AlertCircle, CheckCircle, ChevronDown, Briefcase, X
+  Home, Users, Building, Target, AlertCircle, CheckCircle, ChevronDown, Briefcase, X,
+  Facebook, Twitter, Instagram, Linkedin
 } from 'lucide-react';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, 
@@ -26,44 +27,26 @@ const AgentDashboard = () => {
   const [selectedWorker, setSelectedWorker] = useState('');
   const [notification, setNotification] = useState(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [profile, setProfile] = useState({
-    name: 'Sarah Williams',
-    role: 'Senior Agent',
-    phone: '+1 (555) 234-5678',
-    email: 'sarah@coolhouses.com',
-    bio: 'Specializing in commercial properties and sustainable architecture',
-    image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg',
-    properties: 38,
-    experience: '12 years',
-    rating: 4.8,
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
+  const [profile, setProfile] = useState(null); // null means no profile yet
+  const [createProfile, setCreateProfile] = useState({
+    name: '',
+    role: '',
+    phone: '',
+    email: '',
+    bio: '',
+    image: '', // Will be a data URL
+    imageFile: null,
+    properties: '',
+    experience: '',
+    rating: '',
     social: {
-      facebook: '#',
-      twitter: '#',
-      instagram: '#',
-      linkedin: '#'
+      facebook: '',
+      twitter: '',
+      instagram: '',
+      linkedin: ''
     }
   });
-  const [editProfile, setEditProfile] = useState(profile);
-  const handleProfileChange = e => {
-    const { name, value } = e.target;
-    if (name in editProfile.social) {
-      setEditProfile(prev => ({ ...prev, social: { ...prev.social, [name]: value } }));
-    } else {
-      setEditProfile(prev => ({ ...prev, [name]: value }));
-    }
-  };
-  const handleProfileSubmit = e => {
-    e.preventDefault();
-    const isNewProfile = profile.email !== editProfile.email;
-    setProfile(editProfile);
-    setShowProfileModal(false);
-    if (window.updateAgentProfile) window.updateAgentProfile(editProfile);
-    setNotification({
-      type: 'success',
-      message: isNewProfile ? 'New profile created and added to agents page!' : 'Profile updated!'
-    });
-  };
-
   // Only show leads assigned to this agent
   const [leads, setLeads] = useState([
     {
@@ -374,28 +357,34 @@ const AgentDashboard = () => {
     setNotification({ type: 'info', message: `Adding note for ${lead.name}` });
   };
 
+  // Handle create profile form changes
+  const handleCreateProfileChange = e => {
+    const { name, value, files } = e.target;
+    if (name === 'image') {
+      const file = files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setCreateProfile(prev => ({ ...prev, image: reader.result, imageFile: file }));
+        };
+        reader.readAsDataURL(file);
+      }
+    } else if (name in createProfile.social) {
+      setCreateProfile(prev => ({ ...prev, social: { ...prev.social, [name]: value } }));
+    } else {
+      setCreateProfile(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleCreateProfileSubmit = e => {
+    e.preventDefault();
+    setProfile({ ...createProfile, properties: Number(createProfile.properties), rating: Number(createProfile.rating) });
+    setShowCreateProfileModal(false);
+    setNotification({ type: 'success', message: 'Profile created!' });
+  };
+
   return (
     <div className="min-h-screen bg-[#E2E2E2] text-[#262626] font-quicksand">
-      {/* Header */}
-      <header className="bg-[#153E42] shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="flex items-center">
-              <span className="text-2xl font-bold">
-                <span className="text-[#439CB0]">Vista</span>Estate
-              </span>
-            </div>
-            <h1 className="ml-10 text-xl font-medium text-white">Agent Dashboard</h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 rounded-full bg-[#439CB0] flex items-center justify-center text-white font-medium">
-              AG
-            </div>
-            <span className="font-medium text-white">{AGENT_NAME}</span>
-          </div>
-        </div>
-      </header>
-
       {/* Notification Toast */}
       {notification && (
         <div className="fixed top-4 right-4 z-50 p-4 rounded-xl shadow-2xl bg-[#439CB0] text-white flex items-center space-x-2 transition-opacity duration-300">
@@ -405,24 +394,135 @@ const AgentDashboard = () => {
           </button>
         </div>
       )}
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Business Profile Card */}
-        <div className="mb-12 flex flex-col md:flex-row gap-8 items-center justify-between">
-          <div className="relative bg-white/80 backdrop-blur-xl border border-[#439CB0]/20 shadow-2xl rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 w-full md:w-2/3">
-            <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-lg border-4 border-[#439CB0]/30">
-              <img src={profile.image} alt={profile.name} className="w-full h-full object-cover" />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#153E42]/80 to-transparent h-1/2"></div>
+      {/* Create Profile Modal */}
+      {showCreateProfileModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-4 border-[#439CB0]/30 relative">
+            <button
+              onClick={() => setShowCreateProfileModal(false)}
+              className="absolute top-4 right-4 text-[#439CB0] hover:text-[#153E42] bg-white rounded-full p-2 shadow"
+              aria-label="Close modal"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="p-8">
+              <h2 className="text-3xl font-bold text-[#153E42] mb-2">Create Business Profile</h2>
+              <p className="text-[#439CB0] mb-6">Set up your public agent profile</p>
+              <form onSubmit={handleCreateProfileSubmit} className="space-y-4">
+                <div className="flex flex-col items-center mb-4">
+                  <label htmlFor="profile-image-upload" className="cursor-pointer">
+                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#439CB0]/40 shadow-lg flex items-center justify-center bg-[#E2E2E2] hover:opacity-80 transition-all">
+                      {createProfile.image ? (
+                        <img src={createProfile.image} alt="Profile Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-[#439CB0] text-4xl font-bold">+</span>
+                      )}
+                    </div>
+                  </label>
+                  <input
+                    id="profile-image-upload"
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleCreateProfileChange}
+                    className="hidden"
+                  />
+                  <span className="text-xs text-[#439CB0] mt-2">Upload Profile Image</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Full Name (Required)</label>
+                    <input type="text" name="name" value={createProfile.name} onChange={handleCreateProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Role/Position (Required)</label>
+                    <input type="text" name="role" value={createProfile.role} onChange={handleCreateProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Phone Number (Required)</label>
+                    <input type="tel" name="phone" value={createProfile.phone} onChange={handleCreateProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Email Address (Required)</label>
+                    <input type="email" name="email" value={createProfile.email} onChange={handleCreateProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#262626] mb-1">Bio/Description</label>
+                  <textarea name="bio" value={createProfile.bio} onChange={handleCreateProfileChange} rows={3} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white" placeholder="Brief description of the agent's expertise"></textarea>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Properties Sold</label>
+                    <input type="number" name="properties" value={createProfile.properties} onChange={handleCreateProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 25" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Years of Experience</label>
+                    <input type="text" name="experience" value={createProfile.experience} onChange={handleCreateProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 5 years" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Rating (1-5)</label>
+                    <input type="number" name="rating" value={createProfile.rating} onChange={handleCreateProfileChange} min="1" max="5" step="0.1" className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 4.5" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Facebook Profile</label>
+                    <input type="url" name="facebook" value={createProfile.social.facebook} onChange={handleCreateProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://facebook.com/username" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Twitter Profile</label>
+                    <input type="url" name="twitter" value={createProfile.social.twitter} onChange={handleCreateProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://twitter.com/username" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">Instagram Profile</label>
+                    <input type="url" name="instagram" value={createProfile.social.instagram} onChange={handleCreateProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://instagram.com/username" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#262626] mb-1">LinkedIn Profile</label>
+                    <input type="url" name="linkedin" value={createProfile.social.linkedin} onChange={handleCreateProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://linkedin.com/in/username" />
+                  </div>
+                </div>
+                <div className="pt-4">
+                  <button type="submit" className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Create Profile</button>
+                </div>
+              </form>
             </div>
-            <div className="flex-1 flex flex-col gap-2">
-              <h2 className="text-3xl font-bold text-[#153E42]">{profile.name}</h2>
-              <p className="text-lg text-[#439CB0] font-semibold">{profile.role}</p>
-              <p className="text-[#262626] mb-2">{profile.bio}</p>
-              <div className="flex flex-wrap gap-4 text-[#262626] text-sm">
-                <span><Phone className="inline w-4 h-4 mr-1" /> {profile.phone}</span>
-                <span><Mail className="inline w-4 h-4 mr-1" /> {profile.email}</span>
+          </div>
+        </div>
+      )}
+      {/* Profile Modal (View Only, visually attractive) */}
+      {showProfileModal && profile && (
+        <div className="fixed mt-20 inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#439CB0]/90 via-[#E2E2E2]/90 to-[#153E42]/90 p-0 overflow-y-auto max-h-screen">
+          <div className="relative mt-96 w-full h-full flex items-center justify-center">
+            <button
+              onClick={() => setShowProfileModal(false)}
+              className="absolute mb-180 right-5 text-white bg-[#439CB0]/80 hover:bg-[#153E42] rounded-full p-3 shadow-2xl z-20 border-2 border-white"
+              aria-label="Close profile modal"
+              style={{fontSize: '2rem'}}
+            >
+              <X className="w-8 h-8 " />
+            </button>
+            <div className="w-full  max-w-3xl mx-auto rounded-3xl shadow-2xl overflow-hidden bg-white/80 backdrop-blur-2xl border-4 border-[#439CB0]/40 flex flex-col items-center animate-fadeIn mt-40 mb-8">
+              {/* Hero Section */}
+              <div className="w-full flex flex-col items-center justify-center pb-16 bg-gradient-to-br from-[#439CB0]/10 to-[#E2E2E2]/40">
+                <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-2xl border-8 border-[#439CB0]/40 bg-white mb-4">
+                  <img src={profile.image} alt={profile.name} className="w-full h-full object-cover" />
+                </div>
+                <h2 className="text-2xl font-bold text-[#153E42] mt-2 mb-1 text-center">{profile.name}</h2>
+                <p className="text-base text-[#439CB0] font-semibold mb-2 text-center">{profile.role}</p>
               </div>
-              <div className="flex gap-6 mt-2">
+              {/* About Section */}
+              <div className="w-full px-8 py-6 flex flex-col items-center bg-white/80">
+                <h3 className="text-lg font-semibold text-[#153E42] mb-2">About</h3>
+                <p className="text-[#262626] text-base text-center max-w-xl">{profile.bio}</p>
+              </div>
+              {/* Stats Section */}
+              <div className="w-full flex justify-center gap-12 py-6 bg-gradient-to-r from-[#439CB0]/10 to-[#153E42]/10">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-[#439CB0]">{profile.properties}</div>
                   <div className="text-xs text-[#153E42]">Properties</div>
@@ -436,97 +536,122 @@ const AgentDashboard = () => {
                   <div className="text-xs text-[#153E42]">Rating</div>
                 </div>
               </div>
-              <div className="flex gap-3 mt-4">
-                <a href={profile.social.facebook} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
-                <a href={profile.social.twitter} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-twitter"></i></a>
-                <a href={profile.social.instagram} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
-                <a href={profile.social.linkedin} className="text-[#439CB0] hover:text-[#153E42]" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin-in"></i></a>
+              {/* Contact Section */}
+              <div className="w-full px-8 py-6 flex flex-col items-center bg-white/80">
+                <h3 className="text-lg font-semibold text-[#153E42] mb-2">Contact</h3>
+                <div className="flex flex-wrap gap-6 text-[#262626] text-base justify-center">
+                  <span className="flex items-center gap-2"><Phone className="inline w-5 h-5 mr-1" /> {profile.phone}</span>
+                  <span className="flex items-center gap-2"><Mail className="inline w-5 h-5 mr-1" /> {profile.email}</span>
+                </div>
               </div>
+              {/* Social Section */}
+              {(profile.social.facebook || profile.social.twitter || profile.social.instagram || profile.social.linkedin) && (
+                <div className="w-full px-8 py-10 flex flex-col items-center bg-gradient-to-br from-[#439CB0]/10 to-[#E2E2E2]/40">
+                  <h3 className="text-lg font-semibold text-[#153E42] mb-6">Social</h3>
+                  <div className="flex gap-8 justify-center items-center">
+                    {profile.social.facebook && (
+                      <a href={profile.social.facebook} className="flex flex-col items-center group" target="_blank" rel="noopener noreferrer">
+                        <span className="rounded-full bg-white shadow-lg p-4 text-[#439CB0] transition-transform duration-200 group-hover:scale-110 group-hover:bg-[#439CB0] group-hover:text-white group-hover:shadow-2xl">
+                          <Facebook size={32} />
+                        </span>
+                        <span className="text-xs text-[#153E42] mt-2">Facebook</span>
+                      </a>
+                    )}
+                    {profile.social.twitter && (
+                      <a href={profile.social.twitter} className="flex flex-col items-center group" target="_blank" rel="noopener noreferrer">
+                        <span className="rounded-full bg-white shadow-lg p-4 text-[#439CB0] transition-transform duration-200 group-hover:scale-110 group-hover:bg-[#439CB0] group-hover:text-white group-hover:shadow-2xl">
+                          <Twitter size={32} />
+                        </span>
+                        <span className="text-xs text-[#153E42] mt-2">Twitter</span>
+                      </a>
+                    )}
+                    {profile.social.instagram && (
+                      <a href={profile.social.instagram} className="flex flex-col items-center group" target="_blank" rel="noopener noreferrer">
+                        <span className="rounded-full bg-white shadow-lg p-4 text-[#439CB0] transition-transform duration-200 group-hover:scale-110 group-hover:bg-[#439CB0] group-hover:text-white group-hover:shadow-2xl">
+                          <Instagram size={32} />
+                        </span>
+                        <span className="text-xs text-[#153E42] mt-2">Instagram</span>
+                      </a>
+                    )}
+                    {profile.social.linkedin && (
+                      <a href={profile.social.linkedin} className="flex flex-col items-center group" target="_blank" rel="noopener noreferrer">
+                        <span className="rounded-full bg-white shadow-lg p-4 text-[#439CB0] transition-transform duration-200 group-hover:scale-110 group-hover:bg-[#439CB0] group-hover:text-white group-hover:shadow-2xl">
+                          <Linkedin size={32} />
+                        </span>
+                        <span className="text-xs text-[#153E42] mt-2">LinkedIn</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-            <button onClick={() => { setEditProfile(profile); setShowProfileModal(true); }} className="absolute top-4 right-4 px-4 py-2 bg-[#439CB0] hover:bg-[#153E42] text-white rounded-lg shadow transition-all font-semibold">Edit Profile</button>
           </div>
         </div>
-        {/* Profile Edit Modal */}
-        {showProfileModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#262626]/80 backdrop-blur-sm">
-            <div className="bg-[#E2E2E2] rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-[#262626]">Edit Business Profile</h2>
-                    <p className="text-[#262626]/80">Update your public agent profile</p>
-                  </div>
-                  <button onClick={() => setShowProfileModal(false)} className="text-[#262626]/60 hover:text-[#262626]" aria-label="Close modal">
-                    <X className="w-6 h-6" />
-                  </button>
+      )}
+      {/* Main dashboard content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Create Profile Button (centered, only if no profile) */}
+        {!profile && (
+          <div className="flex justify-center mt-20 mb-12">
+            <div className="bg-white/90 rounded-2xl shadow-lg px-8 py-8 flex flex-col items-center gap-4 w-full max-w-md border border-[#439CB0]/20">
+              <h2 className="text-lg font-semibold text-[#153E42] mb-2">Welcome! Please create your business profile</h2>
+              <button
+                className="bg-[#439CB0] hover:bg-[#153E42] text-white font-semibold px-6 py-3 rounded-xl shadow text-base transition-all"
+                onClick={() => setShowCreateProfileModal(true)}
+              >
+                Create Profile
+              </button>
+            </div>
+          </div>
+        )}
+        {/* Business Profile Card (centered, only if profile exists) */}
+        {profile && (
+          <div className="flex justify-center mt-20 mb-12">
+            <div
+              className="relative bg-white/90 backdrop-blur-xl border border-[#439CB0]/20 shadow-2xl rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 w-full md:w-2/3 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => setShowProfileModal(true)}
+              title="View Profile"
+            >
+              <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg border-4 border-[#439CB0]/30">
+                <img src={profile.image} alt={profile.name} className="w-full h-full object-cover" />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#153E42]/80 to-transparent h-1/2"></div>
+              </div>
+              <div className="flex-1 flex flex-col gap-2 items-center md:items-start">
+                <h2 className="text-2xl font-bold text-[#153E42]">{profile.name}</h2>
+                <p className="text-base text-[#439CB0] font-semibold">{profile.role}</p>
+                <p className="text-[#262626] mb-2 text-base">{profile.bio}</p>
+                <div className="flex flex-wrap gap-4 text-[#262626] text-sm justify-center md:justify-start">
+                  <span><Phone className="inline w-4 h-4 mr-1" /> {profile.phone}</span>
+                  <span><Mail className="inline w-4 h-4 mr-1" /> {profile.email}</span>
                 </div>
-                <form onSubmit={handleProfileSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Full Name (Required)</label>
-                      <input type="text" name="name" value={editProfile.name} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Role/Position (Required)</label>
-                      <input type="text" name="role" value={editProfile.role} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
-                    </div>
+                <div className="flex gap-8 mt-4 justify-center md:justify-start">
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-[#439CB0]">{profile.properties}</div>
+                    <div className="text-xs text-[#153E42]">Properties</div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Phone Number (Required)</label>
-                      <input type="tel" name="phone" value={editProfile.phone} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Email Address (Required)</label>
-                      <input type="email" name="email" value={editProfile.email} onChange={handleProfileChange} required className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" />
-                    </div>
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-[#439CB0]">{profile.experience}</div>
+                    <div className="text-xs text-[#153E42]">Experience</div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-[#262626] mb-1">Bio/Description</label>
-                    <textarea name="bio" value={editProfile.bio} onChange={handleProfileChange} rows={3} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white" placeholder="Brief description of the agent's expertise"></textarea>
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-[#439CB0]">{profile.rating}</div>
+                    <div className="text-xs text-[#153E42]">Rating</div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Properties Sold</label>
-                      <input type="number" name="properties" value={editProfile.properties} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 25" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Years of Experience</label>
-                      <input type="text" name="experience" value={editProfile.experience} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 5 years" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Rating (1-5)</label>
-                      <input type="number" name="rating" value={editProfile.rating} onChange={handleProfileChange} min="1" max="5" step="0.1" className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="e.g. 4.5" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-[#262626] mb-1">Profile Image URL</label>
-                    <input type="url" name="image" value={editProfile.image} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-transparent bg-white" placeholder="https://example.com/agent.jpg" />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Facebook Profile</label>
-                      <input type="url" name="facebook" value={editProfile.social.facebook} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://facebook.com/username" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Twitter Profile</label>
-                      <input type="url" name="twitter" value={editProfile.social.twitter} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://twitter.com/username" />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">Instagram Profile</label>
-                      <input type="url" name="instagram" value={editProfile.social.instagram} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://instagram.com/username" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-[#262626] mb-1">LinkedIn Profile</label>
-                      <input type="url" name="linkedin" value={editProfile.social.linkedin} onChange={handleProfileChange} className="w-full px-4 py-2 border border-[#262626]/30 rounded-lg focus:ring-2 focus:ring-[#439CB0] focus:border-[#439CB0] bg-white" placeholder="https://linkedin.com/in/username" />
-                    </div>
-                  </div>
-                  <div className="pt-4">
-                    <button type="submit" className="w-full bg-[#439CB0] hover:bg-[#153E42] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Save Profile</button>
-                  </div>
-                </form>
+                </div>
+                <div className="flex gap-4 mt-4 justify-center md:justify-start">
+                  {profile.social.facebook && (
+                    <a href={profile.social.facebook} className="text-[#439CB0] hover:text-[#153E42] text-xl" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
+                  )}
+                  {profile.social.twitter && (
+                    <a href={profile.social.twitter} className="text-[#439CB0] hover:text-[#153E42] text-xl" target="_blank" rel="noopener noreferrer"><i className="fab fa-twitter"></i></a>
+                  )}
+                  {profile.social.instagram && (
+                    <a href={profile.social.instagram} className="text-[#439CB0] hover:text-[#153E42] text-xl" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
+                  )}
+                  {profile.social.linkedin && (
+                    <a href={profile.social.linkedin} className="text-[#439CB0] hover:text-[#153E42] text-xl" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin-in"></i></a>
+                  )}
+                </div>
               </div>
             </div>
           </div>
